@@ -4,8 +4,21 @@ Health:
 
 #默认职业的属性
 DefaultGroup:
-  defaultHealth: 20.0
-  HealthIncreasePerLev: 0.0
+  Health:
+    default: 20.0
+    levPeriod: 1
+    increasePerPeriod: 0.0
+	max: 20.0
+  Attack:
+    default: 0.0
+    levPeriod: 1
+    increasePerPeriod: 0.0
+	max: 0.0
+  Defence:
+    default: 0.0
+    levPeriod: 1
+    increasePerPeriod: 1.0
+	max: 20.0
 
 #职业列表
 #需要与groups.yml里的一致
@@ -13,8 +26,8 @@ Groups:
   - hunter
   - archer
 
-#权限列表
-#需要与上面Groups中的列表一一对应！
-Permission:
-  - subtleRPG.hunter
-  - subtleRPG.archer
+#关于权限
+#  - subtleRPG.<groups中的名字>
+#如:
+#  - subtleRPG.hunter
+#  - subtleRPG.archer

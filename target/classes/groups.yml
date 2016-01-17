@@ -1,0 +1,15 @@
+#这是一个例子：
+#hunter: -> 名字，需要与config.yml中的groups一致
+  #name: '猎人' -> 显示的名字
+  #defaultHealth: 10.0 -> 基础血量
+  #HealthIncreasePerLev: 2.0 -> 每一等级增加的血量
+  
+hunter:
+  name: '猎人'
+  defaultHealth: 10.0
+  HealthIncreasePerLev: 2.0
+  
+archer:
+  name: '弓箭手'
+  defaultHealth: 20.0
+  HealthIncreasePerLev: 1.0

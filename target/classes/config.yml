@@ -1,0 +1,20 @@
+Health:
+  #血条长度，10为5颗心
+  Scale: 10
+
+#默认职业的属性
+DefaultGroup:
+  defaultHealth: 20.0
+  HealthIncreasePerLev: 0.0
+
+#职业列表
+#需要与groups.yml里的一致
+Groups:
+  - hunter
+  - archer
+
+#权限列表
+#需要与上面Groups中的列表一一对应！
+Permission:
+  - subtleRPG.hunter
+  - subtleRPG.archer
