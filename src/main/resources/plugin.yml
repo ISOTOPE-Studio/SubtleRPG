@@ -4,4 +4,4 @@ version: 0.1
 commands:
    SubtleRPG:
       description: This is a demo command.
-      usage: /SubtleRPG
+      usage: /SubtleRPG help
