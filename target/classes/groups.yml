@@ -1,15 +1,55 @@
-#这是一个例子：
-#hunter: -> 名字，需要与config.yml中的groups一致
-  #name: '猎人' -> 显示的名字
-  #defaultHealth: 10.0 -> 基础血量
-  #HealthIncreasePerLev: 2.0 -> 每一等级增加的血量
-  
+#注意：输入数值时请注意小数点（除了levPeriod这一项都有小数点）
+#例子：
+#hunter:                    -> 名字，需要与config.yml中的groups一致
+#  name: '猎人'             -> 显示的名字
+#  Health:
+#    default: 20.0          -> 基础血量(20为正常的10颗心)
+#    levPeriod: 1           -> 多少等级记作一阶段
+#    increasePerPeriod: 1.0 -> 每一阶段增加的血量
+#    max: 50.0              -> 最大血量
+#  Attack:                  
+#    default: 1.0           -> 基础攻击值加成(0代表无攻击值加成)
+#    levPeriod: 1           -> 多少等级记作一阶段
+#    increasePerPeriod: 0.0 -> 每一阶段增加的攻击值
+#    max: 10.0              -> 最大攻击值加成
+#  Defence:                 
+#    default: 0.0           -> 基础防御值(以百分比为单位，0为无防御，100为抵御百分之100的伤害（无敌）)
+#    levPeriod: 5           -> 多少等级记作一阶段
+#    increasePerPeriod: 20.0-> 每一阶段增加的防御值
+#    max: 30.0              -> 最大防御值
+
 hunter:
   name: '猎人'
-  defaultHealth: 10.0
-  HealthIncreasePerLev: 2.0
+  Health:
+    default: 20.0
+    levPeriod: 1
+    increasePerPeriod: 0.0
+    max: 30.0
+  Attack:
+    default: 1.0
+    levPeriod: 1
+    increasePerPeriod: 5.0
+    max: 30.0
+  Defence:
+    default: 0.0
+    levPeriod: 1
+    increasePerPeriod: 0.0
+    max: 30.0
   
 archer:
   name: '弓箭手'
-  defaultHealth: 20.0
-  HealthIncreasePerLev: 1.0
+  Health:
+    default: 20.0
+    levPeriod: 1
+    increasePerPeriod: 0.0
+    max: 30.0
+  Attack:
+    default: 1.0
+    levPeriod: 1
+    increasePerPeriod: 2.0
+    max: 300.0
+  Defence:
+    default: 0.0
+    levPeriod: 1
+    increasePerPeriod: 0.0
+    max: 30.0

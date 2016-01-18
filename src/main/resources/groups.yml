@@ -24,17 +24,17 @@ hunter:
     default: 20.0
     levPeriod: 1
     increasePerPeriod: 0.0
-	max: 30.0
+    max: 30.0
   Attack:
     default: 1.0
     levPeriod: 1
-    increasePerPeriod: 0.0
-	max: 30.0
+    increasePerPeriod: 5.0
+    max: 30.0
   Defence:
     default: 0.0
     levPeriod: 1
     increasePerPeriod: 0.0
-	max: 30.0
+    max: 30.0
   
 archer:
   name: '¹­¼ýÊÖ'
@@ -42,14 +42,14 @@ archer:
     default: 20.0
     levPeriod: 1
     increasePerPeriod: 0.0
-	max: 30.0
+    max: 30.0
   Attack:
     default: 1.0
     levPeriod: 1
-    increasePerPeriod: 0.0
-	max: 30.0
+    increasePerPeriod: 2.0
+    max: 300.0
   Defence:
     default: 0.0
     levPeriod: 1
     increasePerPeriod: 0.0
-	max: 30.0
+    max: 30.0

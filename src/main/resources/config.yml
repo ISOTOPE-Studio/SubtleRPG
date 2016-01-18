@@ -8,17 +8,17 @@ DefaultGroup:
     default: 20.0
     levPeriod: 1
     increasePerPeriod: 0.0
-	max: 20.0
+    max: 20.0
   Attack:
     default: 0.0
     levPeriod: 1
     increasePerPeriod: 0.0
-	max: 0.0
+    max: 0.0
   Defence:
     default: 0.0
     levPeriod: 1
     increasePerPeriod: 1.0
-	max: 20.0
+    max: 20.0
 
 #职业列表
 #需要与groups.yml里的一致
