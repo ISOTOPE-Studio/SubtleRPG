@@ -1,7 +1,7 @@
-name: SubtleRPG
+﻿name: SubtleRPG
 main: cc.isotopestudio.SubtleRPG.subtlerpg.SubtleRPG
 version: 0.1
 commands:
-   SubtleRPG:
-      description: This is a demo command.
-      usage: /SubtleRPG help
+  SubtleRPG:
+    description: This is a demo command.
+    usage: /SubtleRPG help

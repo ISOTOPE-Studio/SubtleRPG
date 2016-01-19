@@ -20,7 +20,7 @@ DefaultGroup:
 #需要与groups.yml里的一致
 Groups:
   - hunter
-  - archer
+#  - archer
 
 #关于权限
 #  - subtleRPG.<groups中的名字>

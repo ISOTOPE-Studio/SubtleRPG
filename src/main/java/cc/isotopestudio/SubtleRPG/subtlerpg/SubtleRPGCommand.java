@@ -30,11 +30,11 @@ public class SubtleRPGCommand implements CommandExecutor {
 								sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("玩家")
 										.append(args[1]).append("不存在").toString());
 								return true;
-							} else {
+							} else {// Core
 								sendInfo(sender, args, player);
 								return true;
 							}
-						} else {
+						} else {// Core
 							sendInfo(sender, args, (Player) sender);
 							return true;
 						}
@@ -42,6 +42,48 @@ public class SubtleRPGCommand implements CommandExecutor {
 					} else {
 						sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
 								.append("/subtleRPG info <玩家名字>").toString());
+					}
+				}
+
+				if (args[0].equals("join")) {
+					if (sender.hasPermission("subtleRPG.join")) {
+						if (args.length == 3) {
+							Player player = (Bukkit.getServer().getPlayer(args[2]));
+							if (player == null) {
+								sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("玩家")
+										.append(args[2]).append("不存在").toString());
+								return true;
+							} else { // Core
+								List<String> list = plugin.getConfig().getStringList("Groups");
+								String newJob = null;
+								for (int i = 0; i < list.size(); i++) {
+									if (list.get(i).equals(args[1])) {
+										newJob = list.get(i);
+										break;
+									}
+									if (i == list.size() - 1) {
+										sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
+												.append("职业").append(args[1]).append("不存在").toString());
+
+										return true;
+									}
+								}
+								
+								plugin.data.set(player.getName(), newJob);
+								plugin.saveConfig();
+
+								sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
+										.append(args[2]).append("加入了").append(args[1]).append("！").toString());
+								return true;
+							}
+						} else {
+							sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
+									.append("/subtleRPG join <职业名字> <玩家名字>").toString());
+						}
+					} else {
+						sender.sendMessage(
+								(new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("你没有权限").toString());
+						return true;
 					}
 				}
 
@@ -58,23 +100,24 @@ public class SubtleRPGCommand implements CommandExecutor {
 
 					return true;
 				} else {
-					sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("未知命令").toString());
+					sender.sendMessage(
+							(new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("未知命令").toString());
 					return true;
 				}
-			} else
 
-			{
+			} else { // Help Menu
 				sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA).append("帮助菜单").toString());
 
 				return true;
 			}
 
 		return false;
+
 	}
 
 	public void sendInfo(CommandSender sender, String[] args, Player player) {
-		sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA).append("玩家").append(player.getName())
-				.append("信息").toString());
+		sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA).append("玩家")
+				.append(player.getName()).append("信息").toString());
 
 		boolean isOp = player.isOp();
 		if (player.isOp()) {
@@ -88,8 +131,10 @@ public class SubtleRPGCommand implements CommandExecutor {
 				sender.sendMessage((new StringBuilder()).append(ChatColor.DARK_GREEN).append("职业: ")
 						.append(plugin.getConfig().getString(list.get(i) + ".name")).toString());
 				addDamage = plugin.getConfig().getDouble(list.get(i) + ".Attack.default")
-						+ plugin.getConfig().getDouble(list.get(i) + ".Attack.increasePerPeriod")
-								* (int) (player.getLevel() / plugin.getConfig().getDouble(list.get(i) + ".Attack.levPeriod"));
+						+ plugin.getConfig()
+								.getDouble(list.get(i)
+										+ ".Attack.increasePerPeriod")
+						* (int) (player.getLevel() / plugin.getConfig().getDouble(list.get(i) + ".Attack.levPeriod"));
 				if (addDamage > plugin.getConfig().getDouble(list.get(i) + ".Attack.max")) {
 					addDamage = plugin.getConfig().getDouble(list.get(i) + ".Attack.max");
 				}
