@@ -1,9 +1,5 @@
 #默认职业的属性
 DefaultGroup:
-  Health:
-    default: 20.0
-    levPeriod: 1
-    increasePerPeriod: 0.0
   Attack:
     default: 0.0
     levPeriod: 1
@@ -17,13 +13,8 @@ DefaultGroup:
 #需要与groups.yml里的一致
 #请勿把子职业写在此列表中
 Groups:
-  - hunter
-
-#关于权限
-#  - subtleRPG.<groups中的名字>
-#如:
-#  - subtleRPG.hunter
-#  - subtleRPG.archer
+  - a1
+  - b1
 
 #职业列表
 #注意：输入数值时请注意小数点（除了levPeriod这一项都有小数点）
@@ -35,14 +26,17 @@ Groups:
 #    levPeriod: 1           -> 多少等级记作一阶段
 #    increasePerPeriod: 0.0 -> 每一阶段增加的攻击值
 #  Defence:                 
-#    default: 0.0           -> 基础防御值(以百分比为单位，0为无防御，100为抵御百分之100的伤害（无敌）)
+#    default: 0.0           -> 基础防御值
 #    levPeriod: 5           -> 多少等级记作一阶段
 #    increasePerPeriod: 20.0-> 每一阶段增加的防御值
+#  Perrmission:             -> 权限
+#    - essentials.fly
+#    - essentials.kick
 #  Children:                -> 子职业(子职业可以拥有子职业)
 #    - archer
 #    - killer
 
-hunter:
+a1:
   name: '猎人'
   Attack:
     default: 1.0
@@ -53,17 +47,69 @@ hunter:
     levPeriod: 1
     increasePerPeriod: 5.0
   Children:
-    - archer
-  
-archer:
+    - a11
+  Perrmission:
+    - essentials.fly
+
+a11:
   name: '弓箭手'
   Attack:
     default: 1.0
     levPeriod: 1
     increasePerPeriod: 2.0
-    max: 300.0
   Defence:
     default: 3.0
     levPeriod: 1
     increasePerPeriod: 1.0
-    max: 30.0
+  Children:
+    - a111
+
+a111:
+  name: 'Saver'
+  Attack:
+    default: 2.0
+    levPeriod: 1
+    increasePerPeriod: 2.0
+  Defence:
+    default: 3.0
+    levPeriod: 1
+    increasePerPeriod: 1.0
+
+b1:
+  name: '猎人2'
+  Attack:
+    default: 1.0
+    levPeriod: 1
+    increasePerPeriod: 5.0
+  Defence:
+    default: 1.0
+    levPeriod: 1
+    increasePerPeriod: 5.0
+  Children:
+    - b11
+  Perrmission:
+    - essentials.fly
+  
+b11:
+  name: '弓箭手2'
+  Attack:
+    default: 1.0
+    levPeriod: 1
+    increasePerPeriod: 2.0
+  Defence:
+    default: 3.0
+    levPeriod: 1
+    increasePerPeriod: 1.0
+  Children:
+    - b111
+
+b111:
+  name: 'Saver2'
+  Attack:
+    default: 2.0
+    levPeriod: 1
+    increasePerPeriod: 2.0
+  Defence:
+    default: 3.0
+    levPeriod: 1
+    increasePerPeriod: 1.0

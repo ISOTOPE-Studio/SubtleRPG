@@ -5,15 +5,11 @@ package cc.isotopestudio.SubtleRPG.subtlerpg;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
-import org.bukkit.material.Lever;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,8 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  *
  */
 public final class SubtleRPG extends JavaPlugin implements Listener {
-	private File dataFile = null;
-	public FileConfiguration data = null;
+
 	public final String prefix = (new StringBuilder()).append(ChatColor.GREEN).append("[").append(ChatColor.ITALIC)
 			.append(ChatColor.BOLD).append("SubtleRPG").append(ChatColor.RESET).append(ChatColor.GREEN).append("]")
 			.append(ChatColor.RESET).toString();
@@ -33,23 +28,19 @@ public final class SubtleRPG extends JavaPlugin implements Listener {
 		File file;
 		file = new File(getDataFolder(), name + ".yml");
 		if (!file.exists()) {
-			getConfig().options().copyDefaults(true);
-			try {
-				getConfig().save(file);
-			} catch (IOException ex) {
-				getLogger().severe("配置文件保存出错");
-				getServer().getPluginManager().disablePlugin(this);
-				return;
-			}
+			saveDefaultConfig();
 		}
 	}
 
 	@Override
 	public void onEnable() {
 		getLogger().info("加载配置文件中");
-		saveDefaultConfig();
 
-		data = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "playersData.yml"));
+		createFile("config");
+		try {
+			getPlayersData().save(dataFile);
+		} catch (IOException e) {
+		}
 
 		PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvents(new SubtleRPGListener(this), this);
@@ -59,44 +50,42 @@ public final class SubtleRPG extends JavaPlugin implements Listener {
 	}
 
 	public void onReload() {
+		reloadPlayersData();
 		this.reloadConfig();
 	}
 
 	@Override
 	public void onDisable() {
+		savePlayersData();
 		getLogger().info("SubtleRPG 成功卸载!");
 	}
-/*
-	public void reloadCustomConfig() {
+
+	private File dataFile = null;
+	private FileConfiguration data = null;
+
+	public void reloadPlayersData() {
 		if (dataFile == null) {
-			dataFile = new File(getDataFolder(), "playersDaya.yml");
+			dataFile = new File(getDataFolder(), "playersData.yml");
 		}
 		data = YamlConfiguration.loadConfiguration(dataFile);
-
-		// Look for defaults in the jar
-		Reader defConfigStream = new InputStreamReader(this.getResource("customConfig.yml"), "UTF8");
-		if (defConfigStream != null) {
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			data.setDefaults(defConfig);
-		}
 	}
 
-	public FileConfiguration getCustomConfig() {
+	public FileConfiguration getPlayersData() {
 		if (data == null) {
-			reloadCustomConfig();
+			reloadPlayersData();
 		}
 		return data;
 	}
 
-	public void saveCustomConfig() {
+	public void savePlayersData() {
 		if (data == null || dataFile == null) {
 			return;
-		}
+		}		
 		try {
-			getCustomConfig().save(dataFile);
+			getPlayersData().save(dataFile);
 		} catch (IOException ex) {
-			getLogger().log(Lever.SEVERE, "Could not save config to " + dataFile, ex);
+			getLogger().info("玩家文件保存失败！");
 		}
 	}
-*/
+
 }
