@@ -1,6 +1,4 @@
-package cc.isotopestudio.SubtleRPG.subtlerpg;
-
-import java.util.List;
+﻿package cc.isotopestudio.SubtleRPG.subtlerpg;
 
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -9,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 
 import cc.isotopestudio.SubtleRPG.subtlerpg.SubtleRPG;
 

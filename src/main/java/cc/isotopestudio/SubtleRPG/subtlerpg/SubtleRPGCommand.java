@@ -1,4 +1,4 @@
-package cc.isotopestudio.SubtleRPG.subtlerpg;
+﻿package cc.isotopestudio.SubtleRPG.subtlerpg;
 
 import java.util.List;
 
@@ -11,16 +11,17 @@ import org.bukkit.entity.Player;
 
 public class SubtleRPGCommand implements CommandExecutor {
 	private final SubtleRPG plugin;
+	SubtleRPGPermission per;
 
 	public SubtleRPGCommand(SubtleRPG plugin) {
 		this.plugin = plugin;
+		per = new SubtleRPGPermission(plugin);
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("SubtleRPG"))
 			if (args.length > 0 && !args[0].equals("help")) {
-
 				if (args[0].equals("info")) {
 					if ((sender instanceof Player && (args.length == 1 || args.length == 2))
 							|| (!(sender instanceof Player) && args.length == 2)) {
@@ -48,23 +49,23 @@ public class SubtleRPGCommand implements CommandExecutor {
 				if (args[0].equals("join")) {
 					if (sender.hasPermission("subtleRPG.join")) {
 						if (args.length == 3) {
-							Player player = (Bukkit.getServer().getPlayer(args[2]));
+							Player player = (Bukkit.getServer().getPlayer(args[1]));
 							if (player == null) {
 								sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("玩家")
-										.append(args[2]).append("不存在").toString());
+										.append(args[1]).append("不存在").toString());
 								return true;
 							} else { // Core
 								List<String> list = plugin.getConfig().getStringList("Groups");
 								String newJob = null, newJobName = null;
 								for (int i = 0; i < list.size(); i++) {
-									if (list.get(i).equals(args[1])) {
+									if (list.get(i).equals(args[2])) {
 										newJob = list.get(i);
 										newJobName = plugin.getConfig().getString(newJob + ".name");
 										break;
 									}
 									if (i == list.size() - 1) {
 										sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
-												.append("职业").append(args[1]).append("不存在").toString());
+												.append("职业").append(args[2]).append("不存在").toString());
 										return true;
 									}
 								}
@@ -83,21 +84,33 @@ public class SubtleRPGCommand implements CommandExecutor {
 									temp = plugin.getPlayersData()
 											.getString("Players." + player.getName() + ".subGroup" + count);
 									if (temp != null) {
+										// Delete Permission
+										List<String> permissionList = plugin.getConfig()
+												.getStringList(temp + ".Perrmission");
+										if (permissionList != null)
+											per.playerRemovePermission(player, permissionList);
+
+										// Delete playersData
 										plugin.getPlayersData().set("Players." + player.getName() + ".subGroup" + count,
 												null);
 									}
 								}
+								// Add Permission
+								List<String> permissionList = plugin.getConfig().getStringList(newJob + ".Perrmission");
+								if (permissionList != null)
+									per.playerAddPermission(player, permissionList);
 
 								plugin.getPlayersData().set("Players." + player.getName() + ".group", newJob);
 								plugin.savePlayersData();
 
 								sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
-										.append(args[2]).append("加入了").append(newJobName).append("！").toString());
+										.append(player.getName()).append("加入了").append(newJobName).append("！")
+										.toString());
 								return true;
 							}
 						} else {
 							sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
-									.append("/subtleRPG join <职业> <玩家名字>").toString());
+									.append("/subtleRPG join <玩家名字> <职业>").toString());
 							return true;
 						}
 					} else {
@@ -110,10 +123,10 @@ public class SubtleRPGCommand implements CommandExecutor {
 				if (args[0].equals("joinsub")) {
 					if (sender.hasPermission("subtleRPG.join")) {
 						if (args.length == 3) {
-							Player player = (Bukkit.getServer().getPlayer(args[2]));
+							Player player = (Bukkit.getServer().getPlayer(args[1]));
 							if (player == null) {
 								sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("玩家")
-										.append(args[2]).append("不存在").toString());
+										.append(args[1]).append("不存在").toString());
 								return true;
 							} else { // Core
 								int count = 0;
@@ -138,30 +151,36 @@ public class SubtleRPGCommand implements CommandExecutor {
 								}
 								String newSubGroup = null;
 								for (int i = 0; i < list.size(); i++) {
-									if (list.get(i).equals(args[1])) {
+									if (list.get(i).equals(args[2])) {
 										newSubGroup = list.get(i);
 										break;
 									}
 									if (i == list.size() - 1) {
 										sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
 												.append(plugin.getConfig().getString(group + ".name")).append("的子职业")
-												.append(args[1]).append("不存在").toString());
+												.append(args[2]).append("不存在").toString());
 										return true;
 									}
 								}
 								String newJobName = plugin.getConfig().getString(newSubGroup + ".name");
+
+								List<String> permissionList = plugin.getConfig()
+										.getStringList(newSubGroup + ".Perrmission");
+								if (permissionList != null)
+									per.playerAddPermission(player, permissionList);
 
 								plugin.getPlayersData().set("Players." + player.getName() + ".subGroup" + count,
 										newSubGroup);
 								plugin.savePlayersData();
 
 								sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
-										.append(args[2]).append("加入了子职业").append(newJobName).append("！").toString());
+										.append(player.getName()).append("加入了子职业").append(newJobName).append("！")
+										.toString());
 								return true;
 							}
 						} else {
 							sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
-									.append("/subtleRPG joinsub <子职业> <玩家名字>").toString());
+									.append("/subtleRPG joinsub <玩家名字> <子职业>").toString());
 							return true;
 						}
 					} else {
@@ -176,15 +195,16 @@ public class SubtleRPGCommand implements CommandExecutor {
 				}
 
 			} else { // Help Menu
-				sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA).append("帮助菜单").toString());
+				sender.sendMessage(
+						(new StringBuilder(plugin.prefix)).append(ChatColor.AQUA).append("== 帮助菜单 ==").toString());
 				sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD).append("/subtleRPG info [玩家名字]")
 						.append(ChatColor.GRAY).append(" - ").append(ChatColor.LIGHT_PURPLE).append("查看玩家职业信息")
 						.toString());
-				sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD).append("/subtleRPG join <职业> <玩家名字>")
+				sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD).append("/subtleRPG join <玩家名字> <职业>")
 						.append(ChatColor.GRAY).append(" - ").append(ChatColor.LIGHT_PURPLE).append("加入一个职业")
 						.toString());
 				sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD)
-						.append("/subtleRPG joinsub <子职业> <玩家名字>").append(ChatColor.GRAY).append(" - ")
+						.append("/subtleRPG joinsub <玩家名字> <子职业>").append(ChatColor.GRAY).append(" - ")
 						.append(ChatColor.LIGHT_PURPLE).append("加入一个子职业").toString());
 				return true;
 			}

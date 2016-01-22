@@ -1,7 +1,4 @@
-﻿/**
- * 
- */
-package cc.isotopestudio.SubtleRPG.subtlerpg;
+﻿package cc.isotopestudio.SubtleRPG.subtlerpg;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,7 +77,7 @@ public final class SubtleRPG extends JavaPlugin implements Listener {
 	public void savePlayersData() {
 		if (data == null || dataFile == null) {
 			return;
-		}		
+		}
 		try {
 			getPlayersData().save(dataFile);
 		} catch (IOException ex) {
