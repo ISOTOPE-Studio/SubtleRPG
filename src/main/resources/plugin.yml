@@ -2,7 +2,7 @@
 main: cc.isotopestudio.SubtleRPG.subtlerpg.SubtleRPG
 author: Mars
 website: http://isotopestudio.cc
-version: 1.1
+version: 1.2
 commands:
   SubtleRPG:
     description: SubtleRPG Command.

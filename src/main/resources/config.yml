@@ -9,9 +9,8 @@ DefaultGroup:
     levPeriod: 1
     increasePerPeriod: 1.0
 
-#职业列表
-#需要与groups.yml里的一致
-#请勿把子职业写在此列表中
+#主职业列表
+#请勿把 子职业 写在此列表中！
 Groups:
   - a1
   - b1
@@ -31,7 +30,7 @@ Groups:
 #    increasePerPeriod: 20.0-> 每一阶段增加的防御值
 #  Perrmission:             -> 权限
 #    - essentials.fly
-#    - essentials.kick
+#    - -essentials.kick     -> 以"-"开头的则为取消其权限
 #  Children:                -> 子职业(子职业可以拥有子职业)
 #    - archer
 #    - killer

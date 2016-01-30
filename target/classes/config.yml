@@ -9,11 +9,11 @@ DefaultGroup:
     levPeriod: 1
     increasePerPeriod: 1.0
 
-#职业列表
-#需要与groups.yml里的一致
-#请勿把子职业写在此列表中
+#主职业列表
+#请勿把 子职业 写在此列表中！
 Groups:
-  - hunter
+  - a1
+  - b1
 
 #职业列表
 #注意：输入数值时请注意小数点（除了levPeriod这一项都有小数点）
@@ -30,12 +30,12 @@ Groups:
 #    increasePerPeriod: 20.0-> 每一阶段增加的防御值
 #  Perrmission:             -> 权限
 #    - essentials.fly
-#    - essentials.kick
+#    - -essentials.kick     -> 以"-"开头的则为取消其权限
 #  Children:                -> 子职业(子职业可以拥有子职业)
 #    - archer
 #    - killer
 
-hunter:
+a1:
   name: '猎人'
   Attack:
     default: 1.0
@@ -46,11 +46,11 @@ hunter:
     levPeriod: 1
     increasePerPeriod: 5.0
   Children:
-    - archer
+    - a11
   Perrmission:
     - essentials.fly
-  
-archer:
+
+a11:
   name: '弓箭手'
   Attack:
     default: 1.0
@@ -61,10 +61,49 @@ archer:
     levPeriod: 1
     increasePerPeriod: 1.0
   Children:
-    - saber
+    - a111
 
-saber:
+a111:
   name: 'Saver'
+  Attack:
+    default: 2.0
+    levPeriod: 1
+    increasePerPeriod: 2.0
+  Defence:
+    default: 3.0
+    levPeriod: 1
+    increasePerPeriod: 1.0
+
+b1:
+  name: '猎人2'
+  Attack:
+    default: 1.0
+    levPeriod: 1
+    increasePerPeriod: 5.0
+  Defence:
+    default: 1.0
+    levPeriod: 1
+    increasePerPeriod: 5.0
+  Children:
+    - b11
+  Perrmission:
+    - essentials.fly
+  
+b11:
+  name: '弓箭手2'
+  Attack:
+    default: 1.0
+    levPeriod: 1
+    increasePerPeriod: 2.0
+  Defence:
+    default: 3.0
+    levPeriod: 1
+    increasePerPeriod: 1.0
+  Children:
+    - b111
+
+b111:
+  name: 'Saver2'
   Attack:
     default: 2.0
     levPeriod: 1

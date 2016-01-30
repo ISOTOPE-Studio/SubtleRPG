@@ -188,7 +188,58 @@ public class SubtleRPGCommand implements CommandExecutor {
 								(new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("你没有权限").toString());
 						return true;
 					}
-				} else {
+				}
+
+				if (args[0].equals("list")) {
+					if (args.length == 1) {
+						List<String> groupList = plugin.getConfig().getStringList("Groups");
+						sender.sendMessage(
+								(new StringBuilder(plugin.prefix)).append(ChatColor.AQUA).append("职业列表").toString());
+						for (int i = 0; i < groupList.size(); i++) {
+							String temp = groupList.get(i);
+							sender.sendMessage((new StringBuilder()).append(ChatColor.GRAY).append(" - ")
+									.append(ChatColor.GREEN).append(plugin.getConfig().getString(temp + ".name"))
+									.append(ChatColor.GRAY).append("(" + temp + ")").toString());
+						}
+						return true;
+					} else if (args.length == 2) {
+						List<String> groupList = plugin.getConfig().getStringList(args[1] + ".Children");
+						if (groupList == null) {
+							sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
+									.append(args[1] + "没有子职业").toString());
+							return true;
+						}
+						sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
+								.append(plugin.getConfig().getString(args[1] + ".name")).append(ChatColor.GRAY)
+								.append("(" + args[1] + ")").append(ChatColor.AQUA).append("子职业列表").toString());
+						for (int i = 0; i < groupList.size(); i++) {
+							String temp = groupList.get(i);
+							sender.sendMessage((new StringBuilder()).append(ChatColor.GRAY).append(" - ")
+									.append(ChatColor.GREEN).append(plugin.getConfig().getString(temp + ".name"))
+									.append(ChatColor.GRAY).append("(" + temp + ")").toString());
+						}
+						return true;
+					} else {
+						sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
+								.append("/subtleRPG list [职业]").toString());
+						return true;
+					}
+				}
+
+				if (args[0].equals("reload")) {
+					if (sender instanceof Player && !((Player) sender).isOp()) {
+						sender.sendMessage(
+								(new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("你没有权限").toString());
+						return true;
+					}
+					plugin.onReload();
+					sender.sendMessage(
+							(new StringBuilder(plugin.prefix)).append(ChatColor.BLUE).append("重载成功").toString());
+					return true;
+				}
+
+				// Wrong args0
+				else {
 					sender.sendMessage(
 							(new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("未知命令").toString());
 					return true;
@@ -206,6 +257,12 @@ public class SubtleRPGCommand implements CommandExecutor {
 				sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD)
 						.append("/subtleRPG joinsub <玩家名字> <子职业>").append(ChatColor.GRAY).append(" - ")
 						.append(ChatColor.LIGHT_PURPLE).append("加入一个子职业").toString());
+				sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD).append("/subtleRPG list [职业]")
+						.append(ChatColor.GRAY).append(" - ").append(ChatColor.LIGHT_PURPLE).append("查看（子）职业列表")
+						.toString());
+				sender.sendMessage(
+						(new StringBuilder()).append(ChatColor.GOLD).append("/subtleRPG reload").append(ChatColor.GRAY)
+								.append(" - ").append(ChatColor.LIGHT_PURPLE).append("重载插件配置文件").toString());
 				return true;
 			}
 
