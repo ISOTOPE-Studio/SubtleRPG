@@ -97,7 +97,7 @@ public class SubtleRPGCommand implements CommandExecutor {
 								}
 								// Add Permission
 								List<String> permissionList = plugin.getConfig().getStringList(newJob + ".Perrmission");
-								if (permissionList != null)
+								if (permissionList.size() > 0)
 									per.playerAddPermission(player, permissionList);
 
 								plugin.getPlayersData().set("Players." + player.getName() + ".group", newJob);
@@ -204,7 +204,7 @@ public class SubtleRPGCommand implements CommandExecutor {
 						return true;
 					} else if (args.length == 2) {
 						List<String> groupList = plugin.getConfig().getStringList(args[1] + ".Children");
-						if (groupList == null) {
+						if (groupList.size() == 0) {
 							sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
 									.append(args[1] + "没有子职业").toString());
 							return true;

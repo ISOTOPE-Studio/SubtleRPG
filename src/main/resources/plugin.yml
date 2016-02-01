@@ -1,9 +1,16 @@
 ﻿name: SubtleRPG
 main: cc.isotopestudio.SubtleRPG.subtlerpg.SubtleRPG
+
 author: Mars
+description: RPG with classes
 website: http://isotopestudio.cc
 version: 1.2
 commands:
   SubtleRPG:
     description: SubtleRPG Command.
-    usage: /SubtleRPG help
+    usage: /<command> help
+    aliases: rpg
+permission:
+  SubtleRPG.join:
+    description: Allow to join a class or subClass
+    default: op

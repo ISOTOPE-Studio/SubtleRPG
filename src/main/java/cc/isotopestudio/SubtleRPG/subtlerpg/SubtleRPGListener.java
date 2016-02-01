@@ -1,5 +1,7 @@
 ﻿package cc.isotopestudio.SubtleRPG.subtlerpg;
 
+import java.util.List;
+
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -7,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import cc.isotopestudio.SubtleRPG.subtlerpg.SubtleRPG;
 
@@ -15,6 +18,33 @@ public class SubtleRPGListener implements Listener {
 
 	public SubtleRPGListener(SubtleRPG instance) {
 		plugin = instance;
+	}
+
+	@EventHandler
+	public void onLogin(PlayerJoinEvent event) { // Add Permission
+		Player player = event.getPlayer();
+		SubtleRPGPermission per = new SubtleRPGPermission(plugin);
+
+		// Group
+		String temp = plugin.getPlayersData().getString("Players." + player.getName() + ".group");
+		if (temp == null)
+			return;
+		List<String> permissionList = plugin.getConfig().getStringList(temp + ".Perrmission");
+		if (permissionList.size() > 0)
+			per.playerAddPermission(event.getPlayer(), permissionList);
+
+		// subGroups
+		int count = 0;
+		while (temp != null) {
+			count++;
+			temp = plugin.getPlayersData().getString("Players." + player.getName() + ".subGroup" + count);
+			if (temp != null) {
+				permissionList = plugin.getConfig().getStringList(temp + ".Perrmission");
+				if (permissionList.size() > 0)
+					per.playerAddPermission(event.getPlayer(), permissionList);
+			}
+		}
+
 	}
 
 	@EventHandler
