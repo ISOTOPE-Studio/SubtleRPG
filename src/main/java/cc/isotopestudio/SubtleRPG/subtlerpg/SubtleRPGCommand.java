@@ -20,7 +20,9 @@ public class SubtleRPGCommand implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("SubtleRPG"))
+		if (cmd.getName().equalsIgnoreCase("SubtleRPG")) {
+			if (args.length > 0)
+				args[0].toLowerCase();
 			if (args.length > 0 && !args[0].equals("help")) {
 				if (args[0].equals("info")) {
 					if ((sender instanceof Player && (args.length == 1 || args.length == 2))
@@ -238,6 +240,21 @@ public class SubtleRPGCommand implements CommandExecutor {
 					return true;
 				}
 
+				if (args[0].equals("about")) {
+					sender.sendMessage((new StringBuilder()).append(ChatColor.GRAY).append("---- " + plugin.prefix)
+							.append(ChatColor.RESET).append(ChatColor.DARK_GRAY).append(" " + plugin.version)
+							.append(ChatColor.GRAY).append(" ----").toString());
+					sender.sendMessage((new StringBuilder()).append(ChatColor.BLUE).append(ChatColor.ITALIC)
+							.append("为服务器制作的RPG职业插件").toString());
+					sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD).append(ChatColor.BOLD)
+							.append("制作： ").append(ChatColor.RESET).append(ChatColor.GREEN)
+							.append("Mars (ISOTOPE Studio)").toString());
+					sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD).append(ChatColor.BOLD)
+							.append("网址： ").append(ChatColor.RESET).append(ChatColor.GREEN)
+							.append("http://isotopestudio.cc").toString());
+					return true;
+				}
+
 				// Wrong args0
 				else {
 					sender.sendMessage(
@@ -263,14 +280,17 @@ public class SubtleRPGCommand implements CommandExecutor {
 				sender.sendMessage(
 						(new StringBuilder()).append(ChatColor.GOLD).append("/subtleRPG reload").append(ChatColor.GRAY)
 								.append(" - ").append(ChatColor.LIGHT_PURPLE).append("重载插件配置文件").toString());
+				sender.sendMessage(
+						(new StringBuilder()).append(ChatColor.GOLD).append("/subtleRPG about").append(ChatColor.GRAY)
+								.append(" - ").append(ChatColor.LIGHT_PURPLE).append("查看插件信息").toString());
 				return true;
 			}
-
+		}
 		return false;
 
 	}
 
-	public void sendInfo(CommandSender sender, String[] args, Player player) {
+	private void sendInfo(CommandSender sender, String[] args, Player player) {
 		sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA).append("玩家")
 				.append(player.getName()).append("信息").toString());
 

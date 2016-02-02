@@ -7,6 +7,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -47,7 +48,7 @@ public class SubtleRPGListener implements Listener {
 
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onDamage(EntityDamageByEntityEvent event) {
 		Entity damager = event.getDamager();
 		Entity damagee = event.getEntity();
@@ -67,6 +68,9 @@ public class SubtleRPGListener implements Listener {
 			if (arrow.getShooter() instanceof Player) {
 				Player player = (Player) arrow.getShooter();
 				double power = event.getDamage() / 8.0;
+				if (power > 10.0 / 8.0) {
+					power = 10.0 / 8.0;
+				}
 				double newDamage = power * returnDamage(player) + event.getDamage();
 				player.sendMessage(player.getName() + "射击了" + damagee.getType() + "原伤害：" + event.getDamage() + "加成伤害"
 						+ (int) (newDamage - event.getDamage()) + "力量：" + (int) (power * 100) + "%");
