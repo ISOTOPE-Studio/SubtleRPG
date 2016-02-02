@@ -55,24 +55,28 @@ public class SubtleRPGListener implements Listener {
 		// 玩家攻击
 		if (damager instanceof Player && damagee instanceof LivingEntity) {
 			Player player = (Player) damager;
-			boolean isOp = player.isOp();
-			if (player.isOp()) {
-				player.setOp(false);
-			}
 			double newDamage = returnDamage(player) + event.getDamage();
 			player.sendMessage(player.getName() + "攻击了" + damagee.getType() + "原伤害：" + event.getDamage() + "加成伤害"
 					+ returnDamage(player));
 			event.setDamage(newDamage);
-			player.setOp(isOp);
+		}
+
+		// Arrow的 攻击
+		if (damager instanceof Arrow) {
+			Arrow arrow = (Arrow) damager;
+			if (arrow.getShooter() instanceof Player) {
+				Player player = (Player) arrow.getShooter();
+				double power = event.getDamage() / 8.0;
+				double newDamage = power * returnDamage(player) + event.getDamage();
+				player.sendMessage(player.getName() + "射击了" + damagee.getType() + "原伤害：" + event.getDamage() + "加成伤害"
+						+ (int) (newDamage - event.getDamage()) + "力量：" + (int) (power * 100) + "%");
+				event.setDamage(newDamage);
+			}
 		}
 
 		// 玩家防御
 		if ((damager instanceof LivingEntity || damager instanceof Arrow) && damagee instanceof Player) {
 			Player player = (Player) damagee;
-			boolean isOp = player.isOp();
-			if (player.isOp()) {
-				player.setOp(false);
-			}
 			double newDamage = event.getDamage() - returnDefence(player);
 			player.sendMessage(damager.getType() + "攻击了" + player.getName() + "原伤害：" + event.getDamage() + "防御"
 					+ returnDefence(player));
@@ -80,7 +84,6 @@ public class SubtleRPGListener implements Listener {
 				newDamage = 0;
 			}
 			event.setDamage(newDamage);
-			player.setOp(isOp);
 		}
 	}
 
