@@ -22,7 +22,7 @@ public class SubtleRPGPermission {
 				attachment.setPermission(temp, true);
 		}
 	}
-	
+
 	public void playerRemovePermission(Player player, List<String> permissionList) {
 		PermissionAttachment attachment = player.addAttachment(plugin);
 		for (int i = 0; i < permissionList.size(); i++) {

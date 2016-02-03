@@ -49,7 +49,7 @@ public class SubtleRPGCommand implements CommandExecutor {
 				}
 
 				if (args[0].equals("join")) {
-					if (sender.hasPermission("subtleRPG.join")) {
+					if (sender.hasPermission("subtleRPG.join") || sender.isOp()) {
 						if (args.length == 3) {
 							Player player = (Bukkit.getServer().getPlayer(args[1]));
 							if (player == null) {
@@ -105,6 +105,10 @@ public class SubtleRPGCommand implements CommandExecutor {
 								plugin.getPlayersData().set("Players." + player.getName() + ".group", newJob);
 								plugin.savePlayersData();
 
+								if (!player.getName().equals(sender.getName())) {
+									sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
+											.append("你加入了职业").append(newJobName).append("！").toString());
+								}
 								sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
 										.append(player.getName()).append("加入了").append(newJobName).append("！")
 										.toString());
@@ -123,7 +127,7 @@ public class SubtleRPGCommand implements CommandExecutor {
 				}
 
 				if (args[0].equals("joinsub")) {
-					if (sender.hasPermission("subtleRPG.join")) {
+					if (sender.hasPermission("subtleRPG.join") || sender.isOp()) {
 						if (args.length == 3) {
 							Player player = (Bukkit.getServer().getPlayer(args[1]));
 							if (player == null) {
@@ -174,6 +178,11 @@ public class SubtleRPGCommand implements CommandExecutor {
 								plugin.getPlayersData().set("Players." + player.getName() + ".subGroup" + count,
 										newSubGroup);
 								plugin.savePlayersData();
+
+								if (!player.getName().equals(sender.getName())) {
+									sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
+											.append("你加入了子职业").append(newJobName).append("！").toString());
+								}
 
 								sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
 										.append(player.getName()).append("加入了子职业").append(newJobName).append("！")

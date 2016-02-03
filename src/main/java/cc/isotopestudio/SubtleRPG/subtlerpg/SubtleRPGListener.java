@@ -53,42 +53,87 @@ public class SubtleRPGListener implements Listener {
 		Entity damager = event.getDamager();
 		Entity damagee = event.getEntity();
 
-		// 玩家攻击
-		if (damager instanceof Player && damagee instanceof LivingEntity) {
-			Player player = (Player) damager;
-			double newDamage = returnDamage(player) + event.getDamage();
-			player.sendMessage(player.getName() + "攻击了" + damagee.getType() + "原伤害：" + event.getDamage() + "加成伤害"
-					+ returnDamage(player));
-			event.setDamage(newDamage);
-		}
+		// 玩家攻击玩家
+		if (damager instanceof Player && damagee instanceof Player) {
+			Player attacker = (Player) damager;
+			Player victim = (Player) damagee;
 
-		// Arrow的 攻击
-		if (damager instanceof Arrow) {
-			Arrow arrow = (Arrow) damager;
-			if (arrow.getShooter() instanceof Player) {
-				Player player = (Player) arrow.getShooter();
-				double power = event.getDamage() / 8.0;
-				if (power > 10.0 / 8.0) {
-					power = 10.0 / 8.0;
-				}
-				double newDamage = power * returnDamage(player) + event.getDamage();
-				player.sendMessage(player.getName() + "射击了" + damagee.getType() + "原伤害：" + event.getDamage() + "加成伤害"
-						+ (int) (newDamage - event.getDamage()) + "力量：" + (int) (power * 100) + "%");
-				event.setDamage(newDamage);
-			}
-		}
+			//
+			double damage = returnDamage(attacker) + event.getDamage();
+			double defence = returnDefence(victim);
+			double newDamage = damage - defence;
 
-		// 玩家防御
-		if ((damager instanceof LivingEntity || damager instanceof Arrow) && damagee instanceof Player) {
-			Player player = (Player) damagee;
-			double newDamage = event.getDamage() - returnDefence(player);
-			player.sendMessage(damager.getType() + "攻击了" + player.getName() + "原伤害：" + event.getDamage() + "防御"
-					+ returnDefence(player));
+			String msg = attacker.getName() + "攻击了" + victim.getName() + "原伤害：" + event.getDamage() + "加成伤害"
+					+ returnDamage(attacker) + "对方防御值" + defence;
+			attacker.sendMessage(msg);
+			victim.sendMessage(msg);
 			if (newDamage < 0) {
 				newDamage = 0;
 			}
 			event.setDamage(newDamage);
+
+		} else {
+
+			// 玩家攻击
+			if (damager instanceof Player && damagee instanceof LivingEntity) {
+				Player player = (Player) damager;
+				double newDamage = returnDamage(player) + event.getDamage();
+				player.sendMessage(player.getName() + "攻击了" + damagee.getType() + "原伤害：" + event.getDamage() + "加成伤害"
+						+ returnDamage(player));
+				event.setDamage(newDamage);
+			}
+
+			// Arrow的 攻击
+			if (damager instanceof Arrow) {
+				Arrow arrow = (Arrow) damager;
+				if (arrow.getShooter() instanceof Player) {
+					Player player = (Player) arrow.getShooter();
+					double power = event.getDamage() / 8.0;
+					if (power > 10.0 / 8.0) {
+						power = 10.0 / 8.0;
+					}
+					double newDamage = power * returnDamage(player) + event.getDamage();
+					if (damagee instanceof Player) {
+						Player victim = (Player) damagee;
+
+						double damage = returnDamage(player) + event.getDamage();
+						double defence = returnDefence(victim);
+						newDamage = damage - defence;
+
+						String msg = player.getName() + "射击了" + victim.getName() + "原伤害：" + event.getDamage() + "加成伤害"
+								+ returnDamage(player) + "对方防御值" + defence;
+						player.sendMessage(msg);
+						victim.sendMessage(msg);
+						if (newDamage < 0) {
+							newDamage = 0;
+						}
+						event.setDamage(newDamage);
+						return;
+					} else
+						player.sendMessage(player.getName() + "射击了" + damagee.getType() + "原伤害：" + event.getDamage()
+								+ "加成伤害" + (int) (newDamage - event.getDamage()) + "力量：" + (int) (power * 100) + "%");
+					event.setDamage(newDamage);
+				}
+			}
+
+			// 玩家防御
+			if ((damager instanceof LivingEntity || damager instanceof Arrow) && damagee instanceof Player) {
+				Player player = (Player) damagee;
+				double newDamage = event.getDamage() - returnDefence(player);
+				player.sendMessage(damager.getType() + "攻击了" + player.getName() + "原伤害：" + event.getDamage() + "防御"
+						+ returnDefence(player));
+				if (newDamage < 0) {
+					newDamage = 0;
+				}
+				event.setDamage(newDamage);
+			}
 		}
+
+	}
+
+	@EventHandler(priority = EventPriority.LOW)
+	public void onDefence(EntityDamageByEntityEvent event) {
+
 	}
 
 	public double returnDamage(Player player) {

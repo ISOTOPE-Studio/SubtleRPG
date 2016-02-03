@@ -15,8 +15,8 @@ import org.bukkit.plugin.java.JavaPlugin;
  *
  */
 public final class SubtleRPG extends JavaPlugin implements Listener {
-	
-	public final String version = "v1.2.2.1-debug";
+
+	public final String version = "v1.2.2.2-debug";
 
 	public final String prefix = (new StringBuilder()).append(ChatColor.GREEN).append("[").append(ChatColor.ITALIC)
 			.append(ChatColor.BOLD).append("SubtleRPG").append(ChatColor.RESET).append(ChatColor.GREEN).append("]")
