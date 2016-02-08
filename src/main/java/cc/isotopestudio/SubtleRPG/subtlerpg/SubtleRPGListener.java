@@ -11,6 +11,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import cc.isotopestudio.SubtleRPG.subtlerpg.SubtleRPG;
 
@@ -33,6 +38,9 @@ public class SubtleRPGListener implements Listener {
 		List<String> permissionList = plugin.getConfig().getStringList(temp + ".Perrmission");
 		if (permissionList.size() > 0)
 			per.playerAddPermission(event.getPlayer(), permissionList);
+		List<String> effectList = plugin.getConfig().getStringList(temp + ".Effect");
+		if (effectList.size() > 0)
+			SubtleRPGEffect.applyEffectList(effectList, player);
 
 		// subGroups
 		int count = 0;
@@ -43,9 +51,48 @@ public class SubtleRPGListener implements Listener {
 				permissionList = plugin.getConfig().getStringList(temp + ".Perrmission");
 				if (permissionList.size() > 0)
 					per.playerAddPermission(event.getPlayer(), permissionList);
+				effectList = plugin.getConfig().getStringList(temp + ".Effect");
+				if (effectList.size() > 0)
+					SubtleRPGEffect.applyEffectList(effectList, player);
 			}
 		}
 
+	}
+
+	@EventHandler
+	public void onRespawn(PlayerRespawnEvent event) { // Add Effect
+		final Player player = event.getPlayer();
+		player.sendMessage("Respwan");
+		String temp = plugin.getPlayersData().getString("Players." + player.getName() + ".group");
+		if (temp == null)
+			return;
+		final List<String> effectList = plugin.getConfig().getStringList(temp + ".Effect");
+		if (effectList.size() > 0) {
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					SubtleRPGEffect.applyEffectList(effectList, player);
+				}
+
+			}.runTaskLater(this.plugin, 20);
+		}
+		// subGroups
+		int count = 0;
+		while (temp != null) {
+			count++;
+			temp = plugin.getPlayersData().getString("Players." + player.getName() + ".subGroup" + count);
+			if (temp != null) {
+				final List<String> subeffectList = plugin.getConfig().getStringList(temp + ".Effect");
+				if (effectList.size() > 0)
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							SubtleRPGEffect.applyEffectList(subeffectList, player);
+						}
+
+					}.runTaskLater(this.plugin, 20);
+			}
+		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)

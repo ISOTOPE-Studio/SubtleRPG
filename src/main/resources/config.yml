@@ -49,6 +49,8 @@ a1:
     - a11
   Perrmission:
     - essentials.fly
+  Effect:
+    - ABSORPTION 2
 
 a11:
   name: 'π≠º˝ ÷'
@@ -62,6 +64,9 @@ a11:
     increasePerPeriod: 1.0
   Children:
     - a111
+  Effect:
+    - SPEED 5
+    -  JUMP 2
 
 a111:
   name: 'Saver'
@@ -73,6 +78,8 @@ a111:
     default: 3.0
     levPeriod: 1
     increasePerPeriod: 1.0
+  Effect:
+    - WATER_BREATHING 1
 
 b1:
   name: '¡‘»À2'

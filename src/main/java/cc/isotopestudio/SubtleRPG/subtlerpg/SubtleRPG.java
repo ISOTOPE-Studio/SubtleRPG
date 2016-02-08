@@ -14,9 +14,9 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author Mars
  *
  */
-public final class SubtleRPG extends JavaPlugin implements Listener {
+public final class SubtleRPG extends JavaPlugin {
 
-	public final String version = "v1.2.2.2-debug";
+	public final String version = "v1.3-debug";
 
 	public final String prefix = (new StringBuilder()).append(ChatColor.GREEN).append("[").append(ChatColor.ITALIC)
 			.append(ChatColor.BOLD).append("SubtleRPG").append(ChatColor.RESET).append(ChatColor.GREEN).append("]")
@@ -46,6 +46,8 @@ public final class SubtleRPG extends JavaPlugin implements Listener {
 		this.getCommand("subtleRPG").setExecutor(new SubtleRPGCommand(this));
 
 		getLogger().info("SubtleRPG 成功加载!");
+		getLogger().info("SubtleRPG 由ISOTOPE Studio制作!");
+		getLogger().info("http://isotopestudio.cc");
 	}
 
 	public void onReload() {

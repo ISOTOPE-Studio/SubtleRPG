@@ -59,6 +59,8 @@ public class SubtleRPGCommand implements CommandExecutor {
 							} else { // Core
 								List<String> list = plugin.getConfig().getStringList("Groups");
 								String newJob = null, newJobName = null;
+								String oldJob = plugin.getPlayersData()
+										.getString("Players." + player.getName() + ".group");
 								for (int i = 0; i < list.size(); i++) {
 									if (list.get(i).equals(args[2])) {
 										newJob = list.get(i);
@@ -71,12 +73,14 @@ public class SubtleRPGCommand implements CommandExecutor {
 										return true;
 									}
 								}
-								if (newJob.equals(
-										plugin.getPlayersData().getString("Players." + player.getName() + ".group"))) {
+								if (newJob.equals(oldJob)) {
 									sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
 											.append("你已经是").append(newJobName).append("了").toString());
 									return true;
 								}
+								List<String> effectList = plugin.getConfig().getStringList(oldJob + ".Effect");
+								if (effectList.size() > 0)
+									SubtleRPGEffect.removeEffectList(effectList, player);
 
 								// Delete Subgroups
 								String temp = "";
@@ -92,6 +96,10 @@ public class SubtleRPGCommand implements CommandExecutor {
 										if (permissionList != null)
 											per.playerRemovePermission(player, permissionList);
 
+										effectList = plugin.getConfig().getStringList(temp + ".Effect");
+										if (effectList.size() > 0)
+											SubtleRPGEffect.removeEffectList(effectList, player);
+
 										// Delete playersData
 										plugin.getPlayersData().set("Players." + player.getName() + ".subGroup" + count,
 												null);
@@ -101,6 +109,10 @@ public class SubtleRPGCommand implements CommandExecutor {
 								List<String> permissionList = plugin.getConfig().getStringList(newJob + ".Perrmission");
 								if (permissionList.size() > 0)
 									per.playerAddPermission(player, permissionList);
+								// Add effect
+								effectList = plugin.getConfig().getStringList(newJob + ".Effect");
+								if (effectList.size() > 0)
+									SubtleRPGEffect.applyEffectList(effectList, player);
 
 								plugin.getPlayersData().set("Players." + player.getName() + ".group", newJob);
 								plugin.savePlayersData();
@@ -169,11 +181,15 @@ public class SubtleRPGCommand implements CommandExecutor {
 									}
 								}
 								String newJobName = plugin.getConfig().getString(newSubGroup + ".name");
-
+								// Add Permission
 								List<String> permissionList = plugin.getConfig()
 										.getStringList(newSubGroup + ".Perrmission");
 								if (permissionList != null)
 									per.playerAddPermission(player, permissionList);
+								// Add effect
+								List<String> effectList = plugin.getConfig().getStringList(newSubGroup + ".Effect");
+								if (effectList.size() > 0)
+									SubtleRPGEffect.applyEffectList(effectList, player);
 
 								plugin.getPlayersData().set("Players." + player.getName() + ".subGroup" + count,
 										newSubGroup);
@@ -260,7 +276,7 @@ public class SubtleRPGCommand implements CommandExecutor {
 							.append("Mars (ISOTOPE Studio)").toString());
 					sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD).append(ChatColor.BOLD)
 							.append("网址： ").append(ChatColor.RESET).append(ChatColor.GREEN)
-							.append("http://isotopestudio.cc").toString());
+							.append("http://isotopestudio.cc/minecraft.html").toString());
 					return true;
 				}
 
