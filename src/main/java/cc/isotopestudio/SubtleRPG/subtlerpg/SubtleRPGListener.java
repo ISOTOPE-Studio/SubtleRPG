@@ -11,6 +11,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -91,6 +92,35 @@ public class SubtleRPGListener implements Listener {
 						}
 
 					}.runTaskLater(this.plugin, 20);
+			}
+		}
+	}
+
+	@EventHandler
+	public void onLevelChange(PlayerLevelChangeEvent event) { // Add Effect
+		final Player player = event.getPlayer();
+		if (event.getOldLevel() < event.getNewLevel()) {
+			player.sendMessage("LevelUp");
+			String temp = plugin.getPlayersData().getString("Players." + player.getName() + ".group");
+			if (temp == null)
+				return;
+			final List<String> effectList = plugin.getConfig().getStringList(temp + ".Effect");
+			if (effectList.size() > 0) {
+				SubtleRPGEffect.removeEffectList(effectList, player);
+				SubtleRPGEffect.applyEffectList(effectList, player);
+			}
+			// subGroups
+			int count = 0;
+			while (temp != null) {
+				count++;
+				temp = plugin.getPlayersData().getString("Players." + player.getName() + ".subGroup" + count);
+				if (temp != null) {
+					final List<String> subeffectList = plugin.getConfig().getStringList(temp + ".Effect");
+					if (effectList.size() > 0) {
+						SubtleRPGEffect.removeEffectList(subeffectList, player);
+						SubtleRPGEffect.applyEffectList(subeffectList, player);
+					}
+				}
 			}
 		}
 	}

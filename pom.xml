@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cc.isotopestudio.SubtleRPG</groupId>
 	<artifactId>SubtleRPG</artifactId>
-	<version>1.3-debug</version>
+	<version>1.3.1-debug</version>
 	<build>
 		<plugins>
 			<plugin>

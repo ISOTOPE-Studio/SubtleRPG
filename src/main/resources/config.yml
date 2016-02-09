@@ -34,6 +34,9 @@ Groups:
 #  Children:                -> 子职业(子职业可以拥有子职业)
 #    - archer
 #    - killer
+#  Effect:                  -> 药水效果列表
+#    - SPEED 1 2-10         -> 效果 等级 最小等级-最大等级
+#    - SPEED 2 10-          -> 最大等级可以不填
 
 a1:
   name: '猎人'
@@ -50,7 +53,7 @@ a1:
   Perrmission:
     - essentials.fly
   Effect:
-    - ABSORPTION 2
+    - ABSORPTION 2 1-
 
 a11:
   name: '弓箭手'
@@ -65,8 +68,8 @@ a11:
   Children:
     - a111
   Effect:
-    - SPEED 5
-    -  JUMP 2
+    - SPEED 5 0-5
+    - JUMP 2 15-20
 
 a111:
   name: 'Saver'
@@ -79,7 +82,7 @@ a111:
     levPeriod: 1
     increasePerPeriod: 1.0
   Effect:
-    - WATER_BREATHING 1
+    - WATER_BREATHING 1 10-10
 
 b1:
   name: '猎人2'

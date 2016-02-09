@@ -21,10 +21,23 @@ public class SubtleRPGEffect {
 	}
 
 	private static void applyEffect(String config, Player player) {
-		String[] data = config.split(" ");
-		int amplifier = Integer.parseInt(data[1]);
-		player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(data[0]), Integer.MAX_VALUE, amplifier));
-		player.sendMessage("Apply " + data[0]);
+		{try{
+			String[] data = config.split(" ");
+			int amplifier = Integer.parseInt(data[1]);
+			String[] level = data[2].split("-");
+			int minLevel = 0, maxLevel = Integer.MAX_VALUE;
+			minLevel = Integer.parseInt(level[0]);
+			if (level.length > 1) {
+				maxLevel = Integer.parseInt(level[1]);
+			}
+			
+			if (player.getLevel() >= minLevel && player.getLevel() <= maxLevel) {
+				player.addPotionEffect(
+						new PotionEffect(PotionEffectType.getByName(data[0]), Integer.MAX_VALUE, amplifier));
+				player.sendMessage("Apply " + data[0]);
+			}
+		}catch(Exception e){player.sendMessage("SubtleRPG配置文件出错");}
+		}
 	}
 
 	private static void removeEffect(String config, Player player) {
