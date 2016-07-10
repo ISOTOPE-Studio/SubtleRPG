@@ -1,6 +1,4 @@
-ï»¿package cc.isotopestudio.SubtleRPG.subtlerpg;
-
-import java.util.List;
+package cc.isotopestudio.SubtleRPG.subtlerpg;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,358 +7,361 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 class SubtleRPGCommand implements CommandExecutor {
-	private final SubtleRPG plugin;
-	private final SubtleRPGPermission per;
+    private final SubtleRPG plugin;
+    private final SubtleRPGPermission per;
 
-	public SubtleRPGCommand(SubtleRPG plugin) {
-		this.plugin = plugin;
-		per = new SubtleRPGPermission(plugin);
-	}
+    SubtleRPGCommand(SubtleRPG plugin) {
+        this.plugin = plugin;
+        per = new SubtleRPGPermission(plugin);
+    }
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("SubtleRPG")) {
-			if (args.length > 0 && !args[0].equals("help")) {
-				if (args[0].equals("info")) {
-					if ((sender instanceof Player && (args.length == 1 || args.length == 2))
-							|| (!(sender instanceof Player) && args.length == 2)) {
-						if (args.length == 2) {
-							Player player = (Bukkit.getServer().getPlayer(args[1]));
-							if (player == null) {
-								sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("ç©å®¶")
-										.append(args[1]).append("ä¸å­˜åœ¨").toString());
-								return true;
-							} else {// Core
-								sendInfo(sender, player);
-								return true;
-							}
-						} else {// Core
-							sendInfo(sender, (Player) sender);
-							return true;
-						}
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (cmd.getName().equalsIgnoreCase("SubtleRPG")) {
+            if (args.length > 0 && !args[0].equals("help")) {
+                if (args[0].equals("info")) {
+                    if ((sender instanceof Player && (args.length == 1 || args.length == 2))
+                            || (!(sender instanceof Player) && args.length == 2)) {
+                        if (args.length == 2) {
+                            Player player = (Bukkit.getServer().getPlayer(args[1]));
+                            if (player == null) {
+                                sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("Íæ¼Ò")
+                                        .append(args[1]).append("²»´æÔÚ").toString());
+                                return true;
+                            } else {// Core
+                                sendInfo(sender, player);
+                                return true;
+                            }
+                        } else {// Core
+                            sendInfo(sender, (Player) sender);
+                            return true;
+                        }
 
-					} else {
-						sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
-								.append("/subtleRPG info <ç©å®¶åå­—>").toString());
-					}
-				}
+                    } else {
+                        sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
+                                .append("/subtleRPG info <Íæ¼ÒÃû×Ö>").toString());
+                    }
+                }
 
-				if (args[0].equals("join")) {
-					if (sender.hasPermission("subtleRPG.join") || sender.isOp()) {
-						if (args.length == 3) {
-							Player player = (Bukkit.getServer().getPlayer(args[1]));
-							if (player == null) {
-								sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("ç©å®¶")
-										.append(args[1]).append("ä¸å­˜åœ¨").toString());
-								return true;
-							} else { // Core
-								List<String> list = plugin.getConfig().getStringList("Groups");
-								String newJob = null, newJobName = null;
-								String oldJob = plugin.getPlayersData()
-										.getString("Players." + player.getName() + ".group");
-								for (int i = 0; i < list.size(); i++) {
-									if (list.get(i).equals(args[2])) {
-										newJob = list.get(i);
-										newJobName = plugin.getConfig().getString(newJob + ".name");
-										break;
-									}
-									if (i == list.size() - 1) {
-										sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
-												.append("èŒä¸š").append(args[2]).append("ä¸å­˜åœ¨").toString());
-										return true;
-									}
-								}
-								if (newJob.equals(oldJob)) {
-									sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
-											.append("ä½ å·²ç»æ˜¯").append(newJobName).append("äº†").toString());
-									return true;
-								}
-								List<String> effectList = plugin.getConfig().getStringList(oldJob + ".Effect");
-								if (effectList.size() > 0)
-									SubtleRPGEffect.removeEffectList(effectList, player);
+                if (args[0].equals("join")) {
+                    if (sender.hasPermission("subtleRPG.join") || sender.isOp()) {
+                        if (args.length == 3) {
+                            Player player = (Bukkit.getServer().getPlayer(args[1]));
+                            if (player == null) {
+                                sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("Íæ¼Ò")
+                                        .append(args[1]).append("²»´æÔÚ").toString());
+                                return true;
+                            } else { // Core
+                                List<String> list = plugin.getConfig().getStringList("Groups");
+                                String newJob = null, newJobName = null;
+                                String oldJob = plugin.getPlayersData()
+                                        .getString("Players." + player.getName() + ".group");
+                                for (int i = 0; i < list.size(); i++) {
+                                    if (list.get(i).equals(args[2])) {
+                                        newJob = list.get(i);
+                                        newJobName = plugin.getConfig().getString(newJob + ".name");
+                                        break;
+                                    }
+                                    if (i == list.size() - 1) {
+                                        sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
+                                                .append("Ö°Òµ").append(args[2]).append("²»´æÔÚ").toString());
+                                        return true;
+                                    }
+                                }
+                                assert newJob != null;
+                                if (newJob.equals(oldJob)) {
+                                    sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
+                                            .append("ÄãÒÑ¾­ÊÇ").append(newJobName).append("ÁË").toString());
+                                    return true;
+                                }
+                                List<String> effectList = plugin.getConfig().getStringList(oldJob + ".Effect");
+                                if (effectList.size() > 0)
+                                    SubtleRPGEffect.removeEffectList(effectList, player);
 
-								// Delete Subgroups
-								String temp = "";
-								int count = 0;
-								while (temp != null) {
-									count++;
-									temp = plugin.getPlayersData()
-											.getString("Players." + player.getName() + ".subGroup" + count);
-									if (temp != null) {
-										// Delete Permission
-										List<String> permissionList = plugin.getConfig()
-												.getStringList(temp + ".Perrmission");
-										if (permissionList != null)
-											per.playerRemovePermission(player, permissionList);
+                                // Delete Subgroups
+                                String temp = "";
+                                int count = 0;
+                                while (temp != null) {
+                                    count++;
+                                    temp = plugin.getPlayersData()
+                                            .getString("Players." + player.getName() + ".subGroup" + count);
+                                    if (temp != null) {
+                                        // Delete Permission
+                                        List<String> permissionList = plugin.getConfig()
+                                                .getStringList(temp + ".Perrmission");
+                                        if (permissionList != null)
+                                            per.playerRemovePermission(player, permissionList);
 
-										effectList = plugin.getConfig().getStringList(temp + ".Effect");
-										if (effectList.size() > 0)
-											SubtleRPGEffect.removeEffectList(effectList, player);
+                                        effectList = plugin.getConfig().getStringList(temp + ".Effect");
+                                        if (effectList.size() > 0)
+                                            SubtleRPGEffect.removeEffectList(effectList, player);
 
-										// Delete playersData
-										plugin.getPlayersData().set("Players." + player.getName() + ".subGroup" + count,
-												null);
-									}
-								}
-								// Add Permission
-								List<String> permissionList = plugin.getConfig().getStringList(newJob + ".Perrmission");
-								if (permissionList.size() > 0)
-									per.playerAddPermission(player, permissionList);
-								// Add effect
-								effectList = plugin.getConfig().getStringList(newJob + ".Effect");
-								if (effectList.size() > 0)
-									SubtleRPGEffect.applyEffectList(effectList, player);
+                                        // Delete playersData
+                                        plugin.getPlayersData().set("Players." + player.getName() + ".subGroup" + count,
+                                                null);
+                                    }
+                                }
+                                // Add Permission
+                                List<String> permissionList = plugin.getConfig().getStringList(newJob + ".Perrmission");
+                                if (permissionList.size() > 0)
+                                    per.playerAddPermission(player, permissionList);
+                                // Add effect
+                                effectList = plugin.getConfig().getStringList(newJob + ".Effect");
+                                if (effectList.size() > 0)
+                                    SubtleRPGEffect.applyEffectList(effectList, player);
 
-								plugin.getPlayersData().set("Players." + player.getName() + ".group", newJob);
-								plugin.savePlayersData();
+                                plugin.getPlayersData().set("Players." + player.getName() + ".group", newJob);
+                                plugin.savePlayersData();
 
-								if (!player.getName().equals(sender.getName())) {
-									sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
-											.append("ä½ åŠ å…¥äº†èŒä¸š").append(newJobName).append("ï¼").toString());
-								}
-								sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
-										.append(player.getName()).append("åŠ å…¥äº†").append(newJobName).append("ï¼")
-										.toString());
-								return true;
-							}
-						} else {
-							sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
-									.append("/subtleRPG join <ç©å®¶åå­—> <èŒä¸š>").toString());
-							return true;
-						}
-					} else {
-						sender.sendMessage(
-								(new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("ä½ æ²¡æœ‰æƒé™").toString());
-						return true;
-					}
-				}
+                                if (!player.getName().equals(sender.getName())) {
+                                    sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
+                                            .append("Äã¼ÓÈëÁËÖ°Òµ").append(newJobName).append("£¡").toString());
+                                }
+                                sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
+                                        .append(player.getName()).append("¼ÓÈëÁË").append(newJobName).append("£¡")
+                                        .toString());
+                                return true;
+                            }
+                        } else {
+                            sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
+                                    .append("/subtleRPG join <Íæ¼ÒÃû×Ö> <Ö°Òµ>").toString());
+                            return true;
+                        }
+                    } else {
+                        sender.sendMessage(
+                                (new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("ÄãÃ»ÓĞÈ¨ÏŞ").toString());
+                        return true;
+                    }
+                }
 
-				if (args[0].equals("joinsub")) {
-					if (sender.hasPermission("subtleRPG.join") || sender.isOp()) {
-						if (args.length == 3) {
-							Player player = (Bukkit.getServer().getPlayer(args[1]));
-							if (player == null) {
-								sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("ç©å®¶")
-										.append(args[1]).append("ä¸å­˜åœ¨").toString());
-								return true;
-							} else { // Core
-								int count = 0;
-								String group = plugin.getPlayersData()
-										.getString("Players." + player.getName() + ".group");
-								String temp = "";
-								while (temp != null) {
-									count++;
-									temp = plugin.getPlayersData()
-											.getString("Players." + player.getName() + ".subGroup" + count);
-								}
-								if (count != 1) {
-									group = plugin.getPlayersData()
-											.getString("Players." + player.getName() + ".subGroup" + (count - 1));
-								}
-								List<String> list = plugin.getConfig().getStringList(group + ".Children");
-								if (list.size() == 0) {
-									sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
-											.append(plugin.getConfig().getString(group + ".name")).append("æ²¡æœ‰å­èŒä¸š")
-											.toString());
-									return true;
-								}
-								String newSubGroup = null;
-								for (int i = 0; i < list.size(); i++) {
-									if (list.get(i).equals(args[2])) {
-										newSubGroup = list.get(i);
-										break;
-									}
-									if (i == list.size() - 1) {
-										sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
-												.append(plugin.getConfig().getString(group + ".name")).append("çš„å­èŒä¸š")
-												.append(args[2]).append("ä¸å­˜åœ¨").toString());
-										return true;
-									}
-								}
-								String newJobName = plugin.getConfig().getString(newSubGroup + ".name");
-								// Add Permission
-								List<String> permissionList = plugin.getConfig()
-										.getStringList(newSubGroup + ".Perrmission");
-								if (permissionList != null)
-									per.playerAddPermission(player, permissionList);
-								// Add effect
-								List<String> effectList = plugin.getConfig().getStringList(newSubGroup + ".Effect");
-								if (effectList.size() > 0)
-									SubtleRPGEffect.applyEffectList(effectList, player);
+                if (args[0].equals("joinsub")) {
+                    if (sender.hasPermission("subtleRPG.join") || sender.isOp()) {
+                        if (args.length == 3) {
+                            Player player = (Bukkit.getServer().getPlayer(args[1]));
+                            if (player == null) {
+                                sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("Íæ¼Ò")
+                                        .append(args[1]).append("²»´æÔÚ").toString());
+                                return true;
+                            } else { // Core
+                                int count = 0;
+                                String group = plugin.getPlayersData()
+                                        .getString("Players." + player.getName() + ".group");
+                                String temp = "";
+                                while (temp != null) {
+                                    count++;
+                                    temp = plugin.getPlayersData()
+                                            .getString("Players." + player.getName() + ".subGroup" + count);
+                                }
+                                if (count != 1) {
+                                    group = plugin.getPlayersData()
+                                            .getString("Players." + player.getName() + ".subGroup" + (count - 1));
+                                }
+                                List<String> list = plugin.getConfig().getStringList(group + ".Children");
+                                if (list.size() == 0) {
+                                    sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
+                                            .append(plugin.getConfig().getString(group + ".name")).append("Ã»ÓĞ×ÓÖ°Òµ")
+                                            .toString());
+                                    return true;
+                                }
+                                String newSubGroup = null;
+                                for (int i = 0; i < list.size(); i++) {
+                                    if (list.get(i).equals(args[2])) {
+                                        newSubGroup = list.get(i);
+                                        break;
+                                    }
+                                    if (i == list.size() - 1) {
+                                        sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
+                                                .append(plugin.getConfig().getString(group + ".name")).append("µÄ×ÓÖ°Òµ")
+                                                .append(args[2]).append("²»´æÔÚ").toString());
+                                        return true;
+                                    }
+                                }
+                                String newJobName = plugin.getConfig().getString(newSubGroup + ".name");
+                                // Add Permission
+                                List<String> permissionList = plugin.getConfig()
+                                        .getStringList(newSubGroup + ".Perrmission");
+                                if (permissionList != null)
+                                    per.playerAddPermission(player, permissionList);
+                                // Add effect
+                                List<String> effectList = plugin.getConfig().getStringList(newSubGroup + ".Effect");
+                                if (effectList.size() > 0)
+                                    SubtleRPGEffect.applyEffectList(effectList, player);
 
-								plugin.getPlayersData().set("Players." + player.getName() + ".subGroup" + count,
-										newSubGroup);
-								plugin.savePlayersData();
+                                plugin.getPlayersData().set("Players." + player.getName() + ".subGroup" + count,
+                                        newSubGroup);
+                                plugin.savePlayersData();
 
-								if (!player.getName().equals(sender.getName())) {
-									sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
-											.append("ä½ åŠ å…¥äº†å­èŒä¸š").append(newJobName).append("ï¼").toString());
-								}
+                                if (!player.getName().equals(sender.getName())) {
+                                    sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
+                                            .append("Äã¼ÓÈëÁË×ÓÖ°Òµ").append(newJobName).append("£¡").toString());
+                                }
 
-								sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
-										.append(player.getName()).append("åŠ å…¥äº†å­èŒä¸š").append(newJobName).append("ï¼")
-										.toString());
-								return true;
-							}
-						} else {
-							sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
-									.append("/subtleRPG joinsub <ç©å®¶åå­—> <å­èŒä¸š>").toString());
-							return true;
-						}
-					} else {
-						sender.sendMessage(
-								(new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("ä½ æ²¡æœ‰æƒé™").toString());
-						return true;
-					}
-				}
+                                sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
+                                        .append(player.getName()).append("¼ÓÈëÁË×ÓÖ°Òµ").append(newJobName).append("£¡")
+                                        .toString());
+                                return true;
+                            }
+                        } else {
+                            sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
+                                    .append("/subtleRPG joinsub <Íæ¼ÒÃû×Ö> <×ÓÖ°Òµ>").toString());
+                            return true;
+                        }
+                    } else {
+                        sender.sendMessage(
+                                (new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("ÄãÃ»ÓĞÈ¨ÏŞ").toString());
+                        return true;
+                    }
+                }
 
-				if (args[0].equals("list")) {
-					if (args.length == 1) {
-						List<String> groupList = plugin.getConfig().getStringList("Groups");
-						sender.sendMessage(
-								(new StringBuilder(plugin.prefix)).append(ChatColor.AQUA).append("èŒä¸šåˆ—è¡¨").toString());
-						for (String temp : groupList) {
-							sender.sendMessage((new StringBuilder()).append(ChatColor.GRAY).append(" - ")
-									.append(ChatColor.GREEN).append(plugin.getConfig().getString(temp + ".name"))
-									.append(ChatColor.GRAY).append("(").append(temp).append(")").toString());
-						}
-						return true;
-					} else if (args.length == 2) {
-						List<String> groupList = plugin.getConfig().getStringList(args[1] + ".Children");
-						if (groupList.size() == 0) {
-							sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED).append(args[1]).append("æ²¡æœ‰å­èŒä¸š").toString());
-							return true;
-						}
-						sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
-								.append(plugin.getConfig().getString(args[1] + ".name")).append(ChatColor.GRAY).append("(").append(args[1]).append(")").append(ChatColor.AQUA).append("å­èŒä¸šåˆ—è¡¨").toString());
-						for (String temp : groupList) {
-							sender.sendMessage((new StringBuilder()).append(ChatColor.GRAY).append(" - ")
-									.append(ChatColor.GREEN).append(plugin.getConfig().getString(temp + ".name"))
-									.append(ChatColor.GRAY).append("(").append(temp).append(")").toString());
-						}
-						return true;
-					} else {
-						sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
-								.append("/subtleRPG list [èŒä¸š]").toString());
-						return true;
-					}
-				}
+                if (args[0].equals("list")) {
+                    if (args.length == 1) {
+                        List<String> groupList = plugin.getConfig().getStringList("Groups");
+                        sender.sendMessage(
+                                (new StringBuilder(plugin.prefix)).append(ChatColor.AQUA).append("Ö°ÒµÁĞ±í").toString());
+                        for (String temp : groupList) {
+                            sender.sendMessage((new StringBuilder()).append(ChatColor.GRAY).append(" - ")
+                                    .append(ChatColor.GREEN).append(plugin.getConfig().getString(temp + ".name"))
+                                    .append(ChatColor.GRAY).append("(").append(temp).append(")").toString());
+                        }
+                        return true;
+                    } else if (args.length == 2) {
+                        List<String> groupList = plugin.getConfig().getStringList(args[1] + ".Children");
+                        if (groupList.size() == 0) {
+                            sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED).append(args[1]).append("Ã»ÓĞ×ÓÖ°Òµ").toString());
+                            return true;
+                        }
+                        sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
+                                .append(plugin.getConfig().getString(args[1] + ".name")).append(ChatColor.GRAY).append("(").append(args[1]).append(")").append(ChatColor.AQUA).append("×ÓÖ°ÒµÁĞ±í").toString());
+                        for (String temp : groupList) {
+                            sender.sendMessage((new StringBuilder()).append(ChatColor.GRAY).append(" - ")
+                                    .append(ChatColor.GREEN).append(plugin.getConfig().getString(temp + ".name"))
+                                    .append(ChatColor.GRAY).append("(").append(temp).append(")").toString());
+                        }
+                        return true;
+                    } else {
+                        sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
+                                .append("/subtleRPG list [Ö°Òµ]").toString());
+                        return true;
+                    }
+                }
 
-				if (args[0].equals("reload")) {
-					if (sender instanceof Player && !sender.isOp()) {
-						sender.sendMessage(
-								(new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("ä½ æ²¡æœ‰æƒé™").toString());
-						return true;
-					}
-					plugin.onReload();
-					sender.sendMessage(
-							(new StringBuilder(plugin.prefix)).append(ChatColor.BLUE).append("é‡è½½æˆåŠŸ").toString());
-					return true;
-				}
+                if (args[0].equals("reload")) {
+                    if (sender instanceof Player && !sender.isOp()) {
+                        sender.sendMessage(
+                                (new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("ÄãÃ»ÓĞÈ¨ÏŞ").toString());
+                        return true;
+                    }
+                    plugin.onReload();
+                    sender.sendMessage(
+                            (new StringBuilder(plugin.prefix)).append(ChatColor.BLUE).append("ÖØÔØ³É¹¦").toString());
+                    return true;
+                }
 
-				if (args[0].equals("about")) {
-					sender.sendMessage((new StringBuilder()).append(ChatColor.GRAY).append("---- ").append(plugin.prefix)
-							.append(ChatColor.RESET).append(ChatColor.DARK_GRAY).append(" " + SubtleRPG.version)
-							.append(ChatColor.GRAY).append(" ----").toString());
-					sender.sendMessage((new StringBuilder()).append(ChatColor.BLUE).append(ChatColor.ITALIC)
-							.append("ä¸ºæœåŠ¡å™¨åˆ¶ä½œçš„RPGèŒä¸šæ’ä»¶").toString());
-					sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD).append(ChatColor.BOLD)
-							.append("åˆ¶ä½œï¼š ").append(ChatColor.RESET).append(ChatColor.GREEN)
-							.append("Mars (ISOTOPE Studio)").toString());
-					sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD).append(ChatColor.BOLD)
-							.append("ç½‘å€ï¼š ").append(ChatColor.RESET).append(ChatColor.GREEN)
-							.append("http://isotopestudio.cc/minecraft.html").toString());
-					return true;
-				}
+                if (args[0].equals("about")) {
+                    sender.sendMessage((new StringBuilder()).append(ChatColor.GRAY).append("---- ").append(plugin.prefix)
+                            .append(ChatColor.RESET).append(ChatColor.DARK_GRAY).append(" " + SubtleRPG.version)
+                            .append(ChatColor.GRAY).append(" ----").toString());
+                    sender.sendMessage((new StringBuilder()).append(ChatColor.BLUE).append(ChatColor.ITALIC)
+                            .append("Îª·şÎñÆ÷ÖÆ×÷µÄRPGÖ°Òµ²å¼ş").toString());
+                    sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD).append(ChatColor.BOLD)
+                            .append("ÖÆ×÷£º ").append(ChatColor.RESET).append(ChatColor.GREEN)
+                            .append("Mars (ISOTOPE Studio)").toString());
+                    sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD).append(ChatColor.BOLD)
+                            .append("ÍøÖ·£º ").append(ChatColor.RESET).append(ChatColor.GREEN)
+                            .append("http://isotopestudio.cc/minecraft.html").toString());
+                    return true;
+                }
 
-				// Wrong args0
-				else {
-					sender.sendMessage(
-							(new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("æœªçŸ¥å‘½ä»¤").toString());
-					return true;
-				}
+                // Wrong args0
+                else {
+                    sender.sendMessage(
+                            (new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("Î´ÖªÃüÁî").toString());
+                    return true;
+                }
 
-			} else { // Help Menu
-				sender.sendMessage(
-						(new StringBuilder(plugin.prefix)).append(ChatColor.AQUA).append("== å¸®åŠ©èœå• ==").toString());
-				sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD).append("/subtleRPG info [ç©å®¶åå­—]")
-						.append(ChatColor.GRAY).append(" - ").append(ChatColor.LIGHT_PURPLE).append("æŸ¥çœ‹ç©å®¶èŒä¸šä¿¡æ¯")
-						.toString());
-				sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD).append("/subtleRPG join <ç©å®¶åå­—> <èŒä¸š>")
-						.append(ChatColor.GRAY).append(" - ").append(ChatColor.LIGHT_PURPLE).append("åŠ å…¥ä¸€ä¸ªèŒä¸š")
-						.toString());
-				sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD)
-						.append("/subtleRPG joinsub <ç©å®¶åå­—> <å­èŒä¸š>").append(ChatColor.GRAY).append(" - ")
-						.append(ChatColor.LIGHT_PURPLE).append("åŠ å…¥ä¸€ä¸ªå­èŒä¸š").toString());
-				sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD).append("/subtleRPG list [èŒä¸š]")
-						.append(ChatColor.GRAY).append(" - ").append(ChatColor.LIGHT_PURPLE).append("æŸ¥çœ‹ï¼ˆå­ï¼‰èŒä¸šåˆ—è¡¨")
-						.toString());
-				sender.sendMessage(
-						(new StringBuilder()).append(ChatColor.GOLD).append("/subtleRPG reload").append(ChatColor.GRAY)
-								.append(" - ").append(ChatColor.LIGHT_PURPLE).append("é‡è½½æ’ä»¶é…ç½®æ–‡ä»¶").toString());
-				sender.sendMessage(
-						(new StringBuilder()).append(ChatColor.GOLD).append("/subtleRPG about").append(ChatColor.GRAY)
-								.append(" - ").append(ChatColor.LIGHT_PURPLE).append("æŸ¥çœ‹æ’ä»¶ä¿¡æ¯").toString());
-				return true;
-			}
-		}
-		return false;
+            } else { // Help Menu
+                sender.sendMessage(
+                        (new StringBuilder(plugin.prefix)).append(ChatColor.AQUA).append("== °ïÖú²Ëµ¥ ==").toString());
+                sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD).append("/subtleRPG info [Íæ¼ÒÃû×Ö]")
+                        .append(ChatColor.GRAY).append(" - ").append(ChatColor.LIGHT_PURPLE).append("²é¿´Íæ¼ÒÖ°ÒµĞÅÏ¢")
+                        .toString());
+                sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD).append("/subtleRPG join <Íæ¼ÒÃû×Ö> <Ö°Òµ>")
+                        .append(ChatColor.GRAY).append(" - ").append(ChatColor.LIGHT_PURPLE).append("¼ÓÈëÒ»¸öÖ°Òµ")
+                        .toString());
+                sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD)
+                        .append("/subtleRPG joinsub <Íæ¼ÒÃû×Ö> <×ÓÖ°Òµ>").append(ChatColor.GRAY).append(" - ")
+                        .append(ChatColor.LIGHT_PURPLE).append("¼ÓÈëÒ»¸ö×ÓÖ°Òµ").toString());
+                sender.sendMessage((new StringBuilder()).append(ChatColor.GOLD).append("/subtleRPG list [Ö°Òµ]")
+                        .append(ChatColor.GRAY).append(" - ").append(ChatColor.LIGHT_PURPLE).append("²é¿´£¨×Ó£©Ö°ÒµÁĞ±í")
+                        .toString());
+                sender.sendMessage(
+                        (new StringBuilder()).append(ChatColor.GOLD).append("/subtleRPG reload").append(ChatColor.GRAY)
+                                .append(" - ").append(ChatColor.LIGHT_PURPLE).append("ÖØÔØ²å¼şÅäÖÃÎÄ¼ş").toString());
+                sender.sendMessage(
+                        (new StringBuilder()).append(ChatColor.GOLD).append("/subtleRPG about").append(ChatColor.GRAY)
+                                .append(" - ").append(ChatColor.LIGHT_PURPLE).append("²é¿´²å¼şĞÅÏ¢").toString());
+                return true;
+            }
+        }
+        return false;
 
-	}
+    }
 
-	private void sendInfo(CommandSender sender, Player player) {
-		sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA).append("ç©å®¶")
-				.append(player.getName()).append("ä¿¡æ¯").toString());
+    private void sendInfo(CommandSender sender, Player player) {
+        sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA).append("Íæ¼Ò")
+                .append(player.getName()).append("ĞÅÏ¢").toString());
 
-		boolean isOp = player.isOp();
-		if (player.isOp()) {
-			player.setOp(false);
-		}
-		double addDamage, Defence;
+        boolean isOp = player.isOp();
+        if (player.isOp()) {
+            player.setOp(false);
+        }
+        double addDamage, Defence;
 
-		String group = plugin.getPlayersData().getString("Players." + player.getName() + ".group");
-		if (group == null) {
-			sender.sendMessage((new StringBuilder()).append(ChatColor.DARK_GREEN).append("taæ²¡æœ‰èŒä¸š").toString());
-			return;
-		}
-		addDamage = plugin.getConfig().getDouble(group + ".Attack.default")
-				+ plugin.getConfig().getDouble(group + ".Attack.increasePerPeriod")
-						* (int) (player.getLevel() / plugin.getConfig().getDouble(group + ".Attack.levPeriod"));
-		Defence = plugin.getConfig().getDouble(group + ".Defence.default")
-				+ plugin.getConfig().getDouble(group + ".Defence.increasePerPeriod")
-						* (int) (player.getLevel() / plugin.getConfig().getDouble(group + ".Defence.levPeriod"));
-		sender.sendMessage((new StringBuilder()).append(ChatColor.DARK_GREEN).append("èŒä¸š: ")
-				.append(plugin.getConfig().getString(group + ".name")).toString());
+        String group = plugin.getPlayersData().getString("Players." + player.getName() + ".group");
+        if (group == null) {
+            sender.sendMessage((new StringBuilder()).append(ChatColor.DARK_GREEN).append("taÃ»ÓĞÖ°Òµ").toString());
+            return;
+        }
+        addDamage = plugin.getConfig().getDouble(group + ".Attack.default")
+                + plugin.getConfig().getDouble(group + ".Attack.increasePerPeriod")
+                * (int) (player.getLevel() / plugin.getConfig().getDouble(group + ".Attack.levPeriod"));
+        Defence = plugin.getConfig().getDouble(group + ".Defence.default")
+                + plugin.getConfig().getDouble(group + ".Defence.increasePerPeriod")
+                * (int) (player.getLevel() / plugin.getConfig().getDouble(group + ".Defence.levPeriod"));
+        sender.sendMessage((new StringBuilder()).append(ChatColor.DARK_GREEN).append("Ö°Òµ: ")
+                .append(plugin.getConfig().getString(group + ".name")).toString());
 
-		String temp = "";
-		int count = 0;
-		while (temp != null) {
-			count++;
-			temp = plugin.getPlayersData().getString("Players." + player.getName() + ".subGroup" + count);
-			if (temp != null && count == 1) {
-				sender.sendMessage((new StringBuilder()).append(ChatColor.GREEN).append("å­èŒä¸š: ").toString());
-			}
-			if (temp != null) {
-				addDamage += plugin.getConfig().getDouble(temp + ".Attack.default")
-						+ plugin.getConfig().getDouble(temp + ".Attack.increasePerPeriod")
-								* (int) (player.getLevel() / plugin.getConfig().getDouble(temp + ".Attack.levPeriod"));
-				Defence += plugin.getConfig().getDouble(temp + ".Defence.default")
-						+ plugin.getConfig().getDouble(temp + ".Defence.increasePerPeriod")
-								* (int) (player.getLevel() / plugin.getConfig().getDouble(temp + ".Defence.levPeriod"));
-				sender.sendMessage((new StringBuilder()).append(ChatColor.GREEN).append("- ")
-						.append(plugin.getConfig().getString(temp + ".name")).toString());
-			}
-		}
-		sender.sendMessage((new StringBuilder()).append(ChatColor.DARK_RED).append("HP: ").append(player.getHealth())
-				.append(" / ").append(player.getMaxHealth()).toString());
-		sender.sendMessage(
-				(new StringBuilder()).append(ChatColor.DARK_GREEN).append("ç­‰çº§: ").append(player.getLevel()).toString());
-		sender.sendMessage(
-				(new StringBuilder()).append(ChatColor.YELLOW).append("æ”»å‡»åŠ æˆ: ").append(addDamage).toString());
-		sender.sendMessage((new StringBuilder()).append(ChatColor.YELLOW).append("é˜²å¾¡: ").append(Defence).toString());
+        String temp = "";
+        int count = 0;
+        while (temp != null) {
+            count++;
+            temp = plugin.getPlayersData().getString("Players." + player.getName() + ".subGroup" + count);
+            if (temp != null && count == 1) {
+                sender.sendMessage((new StringBuilder()).append(ChatColor.GREEN).append("×ÓÖ°Òµ: ").toString());
+            }
+            if (temp != null) {
+                addDamage += plugin.getConfig().getDouble(temp + ".Attack.default")
+                        + plugin.getConfig().getDouble(temp + ".Attack.increasePerPeriod")
+                        * (int) (player.getLevel() / plugin.getConfig().getDouble(temp + ".Attack.levPeriod"));
+                Defence += plugin.getConfig().getDouble(temp + ".Defence.default")
+                        + plugin.getConfig().getDouble(temp + ".Defence.increasePerPeriod")
+                        * (int) (player.getLevel() / plugin.getConfig().getDouble(temp + ".Defence.levPeriod"));
+                sender.sendMessage((new StringBuilder()).append(ChatColor.GREEN).append("- ")
+                        .append(plugin.getConfig().getString(temp + ".name")).toString());
+            }
+        }
+        sender.sendMessage((new StringBuilder()).append(ChatColor.DARK_RED).append("HP: ").append(player.getHealth())
+                .append(" / ").append(player.getMaxHealth()).toString());
+        sender.sendMessage(
+                (new StringBuilder()).append(ChatColor.DARK_GREEN).append("µÈ¼¶: ").append(player.getLevel()).toString());
+        sender.sendMessage(
+                (new StringBuilder()).append(ChatColor.YELLOW).append("¹¥»÷¼Ó³É: ").append(addDamage).toString());
+        sender.sendMessage((new StringBuilder()).append(ChatColor.YELLOW).append("·ÀÓù: ").append(Defence).toString());
 
-		player.setOp(isOp);
+        player.setOp(isOp);
 
-	}
+    }
 }

@@ -1,7 +1,4 @@
-Ôªøpackage cc.isotopestudio.SubtleRPG.subtlerpg;
-
-import java.io.File;
-import java.io.IOException;
+package cc.isotopestudio.SubtleRPG.subtlerpg;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -9,78 +6,80 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * @author Mars
- *
  */
 public final class SubtleRPG extends JavaPlugin {
 
-	public static final String version = "v1.3.1-debug";
+    static final String version = "v1.4.0";
 
-	public final String prefix = (new StringBuilder()).append(ChatColor.GREEN).append("[").append(ChatColor.ITALIC)
-			.append(ChatColor.BOLD).append("SubtleRPG").append(ChatColor.RESET).append(ChatColor.GREEN).append("]")
-			.append(ChatColor.RESET).toString();
+    final String prefix = (new StringBuilder()).append(ChatColor.GREEN).append("[").append(ChatColor.ITALIC)
+            .append(ChatColor.BOLD).append("SubtleRPG").append(ChatColor.RESET).append(ChatColor.GREEN).append("]")
+            .append(ChatColor.RESET).toString();
 
-	@Override
-	public void onEnable() {
-		getLogger().info("Âä†ËΩΩÈÖçÁΩÆÊñá‰ª∂‰∏≠");
+    @Override
+    public void onEnable() {
+        getLogger().info("º”‘ÿ≈‰÷√Œƒº˛÷–");
 
-		File file;
-		file = new File(getDataFolder(), "config" + ".yml");
-		if (!file.exists()) {
-			saveDefaultConfig();
-		}
-		try {
-			getPlayersData().save(dataFile);
-		} catch (IOException ignored) {
-		}
+        File file;
+        file = new File(getDataFolder(), "config" + ".yml");
+        if (!file.exists()) {
+            saveDefaultConfig();
+        }
+        try {
+            getPlayersData().save(dataFile);
+        } catch (IOException ignored) {
+        }
 
-		PluginManager pm = this.getServer().getPluginManager();
-		pm.registerEvents(new SubtleRPGListener(this), this);
-		this.getCommand("subtleRPG").setExecutor(new SubtleRPGCommand(this));
+        PluginManager pm = this.getServer().getPluginManager();
+        pm.registerEvents(new SubtleRPGListener(this), this);
+        this.getCommand("subtleRPG").setExecutor(new SubtleRPGCommand(this));
 
-		getLogger().info("SubtleRPG ÊàêÂäüÂä†ËΩΩ!");
-		getLogger().info("SubtleRPG Áî±ISOTOPE StudioÂà∂‰Ωú!");
-		getLogger().info("http://isotopestudio.cc");
-	}
+        getLogger().info("SubtleRPG ≥…π¶º”‘ÿ!");
+        getLogger().info("SubtleRPG ”…ISOTOPE Studio÷∆◊˜!");
+        getLogger().info("http://isotopestudio.cc");
+    }
 
-	public void onReload() {
-		reloadPlayersData();
-		this.reloadConfig();
-	}
+    void onReload() {
+        reloadPlayersData();
+        this.reloadConfig();
+    }
 
-	@Override
-	public void onDisable() {
-		savePlayersData();
-		getLogger().info("SubtleRPG ÊàêÂäüÂç∏ËΩΩ!");
-	}
+    @Override
+    public void onDisable() {
+        savePlayersData();
+        getLogger().info("SubtleRPG ≥…π¶–∂‘ÿ!");
+    }
 
-	private File dataFile = null;
-	private FileConfiguration data = null;
+    private File dataFile = null;
+    private FileConfiguration data = null;
 
-	private void reloadPlayersData() {
-		if (dataFile == null) {
-			dataFile = new File(getDataFolder(), "playersData.yml");
-		}
-		data = YamlConfiguration.loadConfiguration(dataFile);
-	}
+    private void reloadPlayersData() {
+        if (dataFile == null) {
+            dataFile = new File(getDataFolder(), "playersData.yml");
+        }
+        data = YamlConfiguration.loadConfiguration(dataFile);
+    }
 
-	public FileConfiguration getPlayersData() {
-		if (data == null) {
-			reloadPlayersData();
-		}
-		return data;
-	}
+    FileConfiguration getPlayersData() {
+        if (data == null) {
+            reloadPlayersData();
+        }
+        return data;
+    }
 
-	public void savePlayersData() {
-		if (data == null || dataFile == null) {
-			return;
-		}
-		try {
-			getPlayersData().save(dataFile);
-		} catch (IOException ex) {
-			getLogger().info("Áé©ÂÆ∂Êñá‰ª∂‰øùÂ≠òÂ§±Ë¥•ÔºÅ");
-		}
-	}
+    void savePlayersData() {
+        if (data == null || dataFile == null) {
+            return;
+        }
+        try {
+            getPlayersData().save(dataFile);
+        } catch (IOException ex) {
+            getLogger().info("ÕÊº“Œƒº˛±£¥Ê ß∞‹£°");
+        }
+    }
 
 }

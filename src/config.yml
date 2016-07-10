@@ -1,3 +1,6 @@
+#防御值的lore
+lore: '防御值'
+
 #默认职业的属性
 DefaultGroup:
   Attack:

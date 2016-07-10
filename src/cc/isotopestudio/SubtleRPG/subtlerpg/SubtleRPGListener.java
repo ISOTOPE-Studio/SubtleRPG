@@ -1,6 +1,4 @@
-Ôªøpackage cc.isotopestudio.SubtleRPG.subtlerpg;
-
-import java.util.List;
+package cc.isotopestudio.SubtleRPG.subtlerpg;
 
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -13,253 +11,283 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class SubtleRPGListener implements Listener {
-	private final SubtleRPG plugin;
+import java.util.List;
 
-	public SubtleRPGListener(SubtleRPG instance) {
-		plugin = instance;
-	}
+class SubtleRPGListener implements Listener {
+    private final SubtleRPG plugin;
+    private final String key;
 
-	@EventHandler
-	public void onLogin(PlayerJoinEvent event) { // Add Permission
-		Player player = event.getPlayer();
-		SubtleRPGPermission per = new SubtleRPGPermission(plugin);
+    SubtleRPGListener(SubtleRPG instance) {
+        plugin = instance;
+        key = plugin.getConfig().getString("lore") + ": ";
+    }
 
-		// Group
-		String temp = plugin.getPlayersData().getString("Players." + player.getName() + ".group");
-		if (temp == null)
-			return;
-		List<String> permissionList = plugin.getConfig().getStringList(temp + ".Perrmission");
-		if (permissionList.size() > 0)
-			per.playerAddPermission(event.getPlayer(), permissionList);
-		List<String> effectList = plugin.getConfig().getStringList(temp + ".Effect");
-		if (effectList.size() > 0)
-			SubtleRPGEffect.applyEffectList(effectList, player);
+    @EventHandler
+    public void onLogin(PlayerJoinEvent event) { // Add Permission
+        Player player = event.getPlayer();
+        SubtleRPGPermission per = new SubtleRPGPermission(plugin);
 
-		// subGroups
-		int count = 0;
-		while (temp != null) {
-			count++;
-			temp = plugin.getPlayersData().getString("Players." + player.getName() + ".subGroup" + count);
-			if (temp != null) {
-				permissionList = plugin.getConfig().getStringList(temp + ".Perrmission");
-				if (permissionList.size() > 0)
-					per.playerAddPermission(event.getPlayer(), permissionList);
-				effectList = plugin.getConfig().getStringList(temp + ".Effect");
-				if (effectList.size() > 0)
-					SubtleRPGEffect.applyEffectList(effectList, player);
-			}
-		}
+        // Group
+        String temp = plugin.getPlayersData().getString("Players." + player.getName() + ".group");
+        if (temp == null)
+            return;
+        List<String> permissionList = plugin.getConfig().getStringList(temp + ".Perrmission");
+        if (permissionList.size() > 0)
+            per.playerAddPermission(event.getPlayer(), permissionList);
+        List<String> effectList = plugin.getConfig().getStringList(temp + ".Effect");
+        if (effectList.size() > 0)
+            SubtleRPGEffect.applyEffectList(effectList, player);
 
-	}
+        // subGroups
+        int count = 0;
+        while (temp != null) {
+            count++;
+            temp = plugin.getPlayersData().getString("Players." + player.getName() + ".subGroup" + count);
+            if (temp != null) {
+                permissionList = plugin.getConfig().getStringList(temp + ".Perrmission");
+                if (permissionList.size() > 0)
+                    per.playerAddPermission(event.getPlayer(), permissionList);
+                effectList = plugin.getConfig().getStringList(temp + ".Effect");
+                if (effectList.size() > 0)
+                    SubtleRPGEffect.applyEffectList(effectList, player);
+            }
+        }
 
-	@EventHandler
-	public void onRespawn(PlayerRespawnEvent event) { // Add Effect
-		final Player player = event.getPlayer();
-		player.sendMessage("Respwan");
-		String temp = plugin.getPlayersData().getString("Players." + player.getName() + ".group");
-		if (temp == null)
-			return;
-		final List<String> effectList = plugin.getConfig().getStringList(temp + ".Effect");
-		if (effectList.size() > 0) {
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					SubtleRPGEffect.applyEffectList(effectList, player);
-				}
+    }
 
-			}.runTaskLater(this.plugin, 20);
-		}
-		// subGroups
-		int count = 0;
-		while (temp != null) {
-			count++;
-			temp = plugin.getPlayersData().getString("Players." + player.getName() + ".subGroup" + count);
-			if (temp != null) {
-				final List<String> subeffectList = plugin.getConfig().getStringList(temp + ".Effect");
-				if (effectList.size() > 0)
-					new BukkitRunnable() {
-						@Override
-						public void run() {
-							SubtleRPGEffect.applyEffectList(subeffectList, player);
-						}
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent event) { // Add Effect
+        final Player player = event.getPlayer();
+        String temp = plugin.getPlayersData().getString("Players." + player.getName() + ".group");
+        if (temp == null)
+            return;
+        final List<String> effectList = plugin.getConfig().getStringList(temp + ".Effect");
+        if (effectList.size() > 0) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    SubtleRPGEffect.applyEffectList(effectList, player);
+                }
 
-					}.runTaskLater(this.plugin, 20);
-			}
-		}
-	}
+            }.runTaskLater(this.plugin, 20);
+        }
+        // subGroups
+        int count = 0;
+        while (temp != null) {
+            count++;
+            temp = plugin.getPlayersData().getString("Players." + player.getName() + ".subGroup" + count);
+            if (temp != null) {
+                final List<String> subeffectList = plugin.getConfig().getStringList(temp + ".Effect");
+                if (effectList.size() > 0)
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            SubtleRPGEffect.applyEffectList(subeffectList, player);
+                        }
 
-	@EventHandler
-	public void onLevelChange(PlayerLevelChangeEvent event) { // Add Effect
-		final Player player = event.getPlayer();
-		if (event.getOldLevel() < event.getNewLevel()) {
-			player.sendMessage("LevelUp");
-			String temp = plugin.getPlayersData().getString("Players." + player.getName() + ".group");
-			if (temp == null)
-				return;
-			final List<String> effectList = plugin.getConfig().getStringList(temp + ".Effect");
-			if (effectList.size() > 0) {
-				SubtleRPGEffect.removeEffectList(effectList, player);
-				SubtleRPGEffect.applyEffectList(effectList, player);
-			}
-			// subGroups
-			int count = 0;
-			while (temp != null) {
-				count++;
-				temp = plugin.getPlayersData().getString("Players." + player.getName() + ".subGroup" + count);
-				if (temp != null) {
-					final List<String> subeffectList = plugin.getConfig().getStringList(temp + ".Effect");
-					if (effectList.size() > 0) {
-						SubtleRPGEffect.removeEffectList(subeffectList, player);
-						SubtleRPGEffect.applyEffectList(subeffectList, player);
-					}
-				}
-			}
-		}
-	}
+                    }.runTaskLater(this.plugin, 20);
+            }
+        }
+    }
 
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onDamage(EntityDamageByEntityEvent event) {
-		Entity damager = event.getDamager();
-		Entity damagee = event.getEntity();
+    @EventHandler
+    public void onLevelChange(PlayerLevelChangeEvent event) { // Add Effect
+        final Player player = event.getPlayer();
+        if (event.getOldLevel() < event.getNewLevel()) {
+            String temp = plugin.getPlayersData().getString("Players." + player.getName() + ".group");
+            if (temp == null)
+                return;
+            final List<String> effectList = plugin.getConfig().getStringList(temp + ".Effect");
+            if (effectList.size() > 0) {
+                SubtleRPGEffect.removeEffectList(effectList, player);
+                SubtleRPGEffect.applyEffectList(effectList, player);
+            }
+            // subGroups
+            int count = 0;
+            while (temp != null) {
+                count++;
+                temp = plugin.getPlayersData().getString("Players." + player.getName() + ".subGroup" + count);
+                if (temp != null) {
+                    final List<String> subeffectList = plugin.getConfig().getStringList(temp + ".Effect");
+                    if (effectList.size() > 0) {
+                        SubtleRPGEffect.removeEffectList(subeffectList, player);
+                        SubtleRPGEffect.applyEffectList(subeffectList, player);
+                    }
+                }
+            }
+        }
+    }
 
-		// Áé©ÂÆ∂ÊîªÂáªÁé©ÂÆ∂
-		if (damager instanceof Player && damagee instanceof Player) {
-			Player attacker = (Player) damager;
-			Player victim = (Player) damagee;
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onDamage(EntityDamageByEntityEvent event) {
+        Entity damager = event.getDamager();
+        Entity damagee = event.getEntity();
 
-			//
-			double damage = returnDamage(attacker) + event.getDamage();
-			double defence = returnDefence(victim);
-			double newDamage = damage - defence;
+        // ÕÊº“π•ª˜ÕÊº“
+        if (damager instanceof Player && damagee instanceof Player) {
+            Player attacker = (Player) damager;
+            Player victim = (Player) damagee;
 
-			String msg = attacker.getName() + "ÊîªÂáª‰∫Ü" + victim.getName() + "Âéü‰º§ÂÆ≥Ôºö" + event.getDamage() + "Âä†Êàê‰º§ÂÆ≥"
-					+ returnDamage(attacker) + "ÂØπÊñπÈò≤Âæ°ÂÄº" + defence;
-			attacker.sendMessage(msg);
-			victim.sendMessage(msg);
-			if (newDamage < 0) {
-				newDamage = 0;
-			}
-			event.setDamage(newDamage);
+            //
+            double damage = returnDamage(attacker) + event.getDamage();
+            double defence = returnDefence(victim);
+            if (defence < 0) defence = 0;
+            double newDamage = damage - defence;
 
-		} else {
+            String msg = attacker.getName() + "π•ª˜¡À" + victim.getName() + "‘≠…À∫¶£∫" + event.getDamage() + "º”≥……À∫¶"
+                    + returnDamage(attacker) + "∂‘∑Ω∑¿”˘÷µ" + defence;
+            attacker.sendMessage(msg);
+            victim.sendMessage(msg);
+            if (newDamage < 0) {
+                newDamage = 0;
+            }
+            event.setDamage(newDamage);
 
-			// Áé©ÂÆ∂ÊîªÂáª
-			if (damager instanceof Player && damagee instanceof LivingEntity) {
-				Player player = (Player) damager;
-				double newDamage = returnDamage(player) + event.getDamage();
-				player.sendMessage(player.getName() + "ÊîªÂáª‰∫Ü" + damagee.getType() + "Âéü‰º§ÂÆ≥Ôºö" + event.getDamage() + "Âä†Êàê‰º§ÂÆ≥"
-						+ returnDamage(player));
-				event.setDamage(newDamage);
-			}
+        } else {
 
-			// ArrowÁöÑ ÊîªÂáª
-			if (damager instanceof Arrow) {
-				Arrow arrow = (Arrow) damager;
-				if (arrow.getShooter() instanceof Player) {
-					Player player = (Player) arrow.getShooter();
-					double power = event.getDamage() / 8.0;
-					if (power > 10.0 / 8.0) {
-						power = 10.0 / 8.0;
-					}
-					double newDamage = power * returnDamage(player) + event.getDamage();
-					if (damagee instanceof Player) {
-						Player victim = (Player) damagee;
+            // ÕÊº“π•ª˜
+            if (damager instanceof Player && damagee instanceof LivingEntity) {
+                Player player = (Player) damager;
+                double newDamage = returnDamage(player) + event.getDamage();
+                //player.sendMessage(player.getName() + "π•ª˜¡À" + damagee.getType() + "‘≠…À∫¶£∫" + event.getDamage() + "º”≥……À∫¶" + returnDamage(player));
+                event.setDamage(newDamage);
+            }
 
-						double damage = returnDamage(player) + event.getDamage();
-						double defence = returnDefence(victim);
-						newDamage = damage - defence;
+            // Arrowµƒ π•ª˜
+            if (damager instanceof Arrow) {
+                Arrow arrow = (Arrow) damager;
+                if (arrow.getShooter() instanceof Player) {
+                    Player player = (Player) arrow.getShooter();
+                    double power = event.getDamage() / 8.0;
+                    if (power > 10.0 / 8.0) {
+                        power = 10.0 / 8.0;
+                    }
+                    double newDamage = power * returnDamage(player) + event.getDamage();
+                    if (damagee instanceof Player) {
+                        Player victim = (Player) damagee;
 
-						String msg = player.getName() + "Â∞ÑÂáª‰∫Ü" + victim.getName() + "Âéü‰º§ÂÆ≥Ôºö" + event.getDamage() + "Âä†Êàê‰º§ÂÆ≥"
-								+ returnDamage(player) + "ÂØπÊñπÈò≤Âæ°ÂÄº" + defence;
-						player.sendMessage(msg);
-						victim.sendMessage(msg);
-						if (newDamage < 0) {
-							newDamage = 0;
-						}
-						event.setDamage(newDamage);
-						return;
-					} else
-						player.sendMessage(player.getName() + "Â∞ÑÂáª‰∫Ü" + damagee.getType() + "Âéü‰º§ÂÆ≥Ôºö" + event.getDamage()
-								+ "Âä†Êàê‰º§ÂÆ≥" + (int) (newDamage - event.getDamage()) + "ÂäõÈáèÔºö" + (int) (power * 100) + "%");
-					event.setDamage(newDamage);
-				}
-			}
+                        double damage = returnDamage(player) + event.getDamage();
+                        double defence = returnDefence(victim);
+                        if (defence < 0) defence = 0;
+                        newDamage = damage - defence;
+                        /*
+                        String msg = player.getName() + "…‰ª˜¡À" + victim.getName() + "‘≠…À∫¶£∫" + event.getDamage() + "º”≥……À∫¶"
+                                + returnDamage(player) + "∂‘∑Ω∑¿”˘÷µ" + defence;
+                        player.sendMessage(msg);
+                        victim.sendMessage(msg);
+                        */
+                        if (newDamage < 0) {
+                            newDamage = 0;
+                        }
+                        event.setDamage(newDamage);
+                        return;
+                    } else
+                        /*
+                        player.sendMessage(player.getName() + "…‰ª˜¡À" + damagee.getType() + "‘≠…À∫¶£∫" + event.getDamage()
+                                + "º”≥……À∫¶" + (int) (newDamage - event.getDamage()) + "¡¶¡ø£∫" + (int) (power * 100) + "%");
+                    */
+                        event.setDamage(newDamage);
+                }
+            }
 
-			// Áé©ÂÆ∂Èò≤Âæ°
-			if ((damager instanceof LivingEntity || damager instanceof Arrow) && damagee instanceof Player) {
-				Player player = (Player) damagee;
-				double newDamage = event.getDamage() - returnDefence(player);
-				player.sendMessage(damager.getType() + "ÊîªÂáª‰∫Ü" + player.getName() + "Âéü‰º§ÂÆ≥Ôºö" + event.getDamage() + "Èò≤Âæ°"
-						+ returnDefence(player));
-				if (newDamage < 0) {
-					newDamage = 0;
-				}
-				event.setDamage(newDamage);
-			}
-		}
+            // ÕÊº“∑¿”˘
+            if ((damager instanceof LivingEntity || damager instanceof Arrow) && damagee instanceof Player) {
+                Player player = (Player) damagee;
+                double defence = returnDefence(player);
+                if (defence < 0) defence = 0;
+                double newDamage = event.getDamage() - defence;
+                //player.sendMessage(damager.getType() + "π•ª˜¡À" + player.getName() + "‘≠…À∫¶£∫" + event.getDamage() + "∑¿”˘" + defence);
+                if (newDamage < 0) {
+                    newDamage = 0;
+                }
+                event.setDamage(newDamage);
+            }
+        }
 
-	}
+    }
 
-	private double returnDamage(Player player) {
-		double addDamage;
-		String group = plugin.getPlayersData().getString("Players." + player.getName() + ".group");
+    private int getDefefenceFromItem(ItemStack item) {
+        if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasLore()) return 0;
+        for (String lore : item.getItemMeta().getLore()) {
+            int index = lore.indexOf(key);
+            if (index == -1) continue;
+            index += key.length();
+            boolean add = true;
+            if (lore.charAt(index) == '-') {
+                add = false;
+            }
+            try {
+                return Integer.parseInt(lore.substring(++index)) * (add ? 1 : -1);
+            } catch (Exception ignored) {
+            }
+        }
+        return 0;
+    }
 
-		if (group != null) {
-			addDamage = plugin.getConfig().getDouble(group + ".Attack.default")
-					+ plugin.getConfig().getDouble(group + ".Attack.increasePerPeriod")
-							* (int) (player.getLevel() / plugin.getConfig().getDouble(group + ".Attack.levPeriod"));
-			return returnDamage(player, addDamage, 1);
-		} else {
-			addDamage = plugin.getConfig().getDouble("DefaultGroup.Attack.default")
-					+ plugin.getConfig().getDouble("DefaultGroup.Attack.increasePerPeriod")
-							* (int) (player.getLevel() / plugin.getConfig().getDouble("DefaultGroup.Attack.levPeriod"));
-			return addDamage;
-		}
-	}
+    private double returnDamage(Player player) {
+        double addDamage;
+        String group = plugin.getPlayersData().getString("Players." + player.getName() + ".group");
 
-	private double returnDamage(final Player player, final double addDamage, int subGroupNum) {
-		String newGroup = plugin.getPlayersData().getString("Players." + player.getName() + ".subGroup" + subGroupNum);
-		if (newGroup == null) {
-			return addDamage;
-		} else {
-			double newDamage = plugin.getConfig().getDouble(newGroup + ".Attack.default")
-					+ plugin.getConfig().getDouble(newGroup + ".Attack.increasePerPeriod")
-							* (int) (player.getLevel() / plugin.getConfig().getDouble(newGroup + ".Attack.levPeriod"));
-			return returnDamage(player, newDamage + addDamage, subGroupNum + 1);
-		}
-	}
+        if (group != null) {
+            addDamage = plugin.getConfig().getDouble(group + ".Attack.default")
+                    + plugin.getConfig().getDouble(group + ".Attack.increasePerPeriod")
+                    * (int) (player.getLevel() / plugin.getConfig().getDouble(group + ".Attack.levPeriod"));
+            return returnDamage(player, addDamage, 1);
+        } else {
+            addDamage = plugin.getConfig().getDouble("DefaultGroup.Attack.default")
+                    + plugin.getConfig().getDouble("DefaultGroup.Attack.increasePerPeriod")
+                    * (int) (player.getLevel() / plugin.getConfig().getDouble("DefaultGroup.Attack.levPeriod"));
+            return addDamage;
+        }
+    }
 
-	private double returnDefence(Player player) {
-		double Defence;
-		String group = plugin.getPlayersData().getString("Players." + player.getName() + ".group");
+    private double returnDamage(final Player player, final double addDamage, int subGroupNum) {
+        String newGroup = plugin.getPlayersData().getString("Players." + player.getName() + ".subGroup" + subGroupNum);
+        if (newGroup == null) {
+            return addDamage;
+        } else {
+            double newDamage = plugin.getConfig().getDouble(newGroup + ".Attack.default")
+                    + plugin.getConfig().getDouble(newGroup + ".Attack.increasePerPeriod")
+                    * (int) (player.getLevel() / plugin.getConfig().getDouble(newGroup + ".Attack.levPeriod"));
+            return returnDamage(player, newDamage + addDamage, subGroupNum + 1);
+        }
+    }
 
-		if (group != null) { // Player has a group
-			Defence = plugin.getConfig().getDouble(group + ".Defence.default")
-					+ plugin.getConfig().getDouble(group + ".Defence.increasePerPeriod")
-							* (int) (player.getLevel() / plugin.getConfig().getDouble(group + ".Defence.levPeriod"));
-			return returnDefence(player, Defence, 1);
+    private double returnDefence(Player player) {
+        double Defence = 0;
+        for (ItemStack item : player.getEquipment().getArmorContents()) {
+            Defence += getDefefenceFromItem(item);
+        }
+        Defence += getDefefenceFromItem(player.getItemInHand());
+        String group = plugin.getPlayersData().getString("Players." + player.getName() + ".group");
 
-		} else { // Player does not have a group
-			Defence = plugin.getConfig().getDouble("DefaultGroup.Defence.default") + plugin.getConfig()
-					.getDouble("DefaultGroup.Defence.increasePerPeriod")
-					* (int) (player.getLevel() / plugin.getConfig().getDouble("DefaultGroup.Defence.levPeriod"));
-			return Defence;
-		}
-	}
+        if (group != null) { // Player has a group
+            Defence += plugin.getConfig().getDouble(group + ".Defence.default")
+                    + plugin.getConfig().getDouble(group + ".Defence.increasePerPeriod")
+                    * (int) (player.getLevel() / plugin.getConfig().getDouble(group + ".Defence.levPeriod"));
+            return returnDefence(player, Defence, 1);
 
-	private double returnDefence(final Player player, final double addDefence, int subGroupNum) {
-		String newGroup = plugin.getPlayersData().getString("Players." + player.getName() + ".subGroup" + subGroupNum);
-		if (newGroup == null) {
-			return addDefence;
-		} else {
-			double newDefence = plugin.getConfig().getDouble(newGroup + ".Defence.default")
-					+ plugin.getConfig().getDouble(newGroup + ".Defence.increasePerPeriod")
-							* (int) (player.getLevel() / plugin.getConfig().getDouble(newGroup + ".Defence.levPeriod"));
-			return returnDefence(player, newDefence + addDefence, subGroupNum + 1);
-		}
-	}
+        } else { // Player does not have a group
+            Defence += plugin.getConfig().getDouble("DefaultGroup.Defence.default") + plugin.getConfig()
+                    .getDouble("DefaultGroup.Defence.increasePerPeriod")
+                    * (int) (player.getLevel() / plugin.getConfig().getDouble("DefaultGroup.Defence.levPeriod"));
+            return Defence;
+        }
+    }
+
+    private double returnDefence(final Player player, final double addDefence, int subGroupNum) {
+        String newGroup = plugin.getPlayersData().getString("Players." + player.getName() + ".subGroup" + subGroupNum);
+        if (newGroup == null) {
+            return addDefence;
+        } else {
+            double newDefence = plugin.getConfig().getDouble(newGroup + ".Defence.default")
+                    + plugin.getConfig().getDouble(newGroup + ".Defence.increasePerPeriod")
+                    * (int) (player.getLevel() / plugin.getConfig().getDouble(newGroup + ".Defence.levPeriod"));
+            return returnDefence(player, newDefence + addDefence, subGroupNum + 1);
+        }
+    }
 
 }
