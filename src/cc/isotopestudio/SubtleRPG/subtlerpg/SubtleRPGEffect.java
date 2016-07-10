@@ -6,17 +6,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class SubtleRPGEffect {
+class SubtleRPGEffect {
 
 	public static void applyEffectList(List<String> config, Player player) {
-		for (int i = 0; i < config.size(); i++) {
-			applyEffect(config.get(i), player);
+		for (String aConfig : config) {
+			applyEffect(aConfig, player);
 		}
 	}
 
 	public static void removeEffectList(List<String> config, Player player) {
-		for (int i = 0; i < config.size(); i++) {
-			removeEffect(config.get(i), player);
+		for (String aConfig : config) {
+			removeEffect(aConfig, player);
 		}
 	}
 
@@ -25,7 +25,7 @@ public class SubtleRPGEffect {
 			String[] data = config.split(" ");
 			int amplifier = Integer.parseInt(data[1]);
 			String[] level = data[2].split("-");
-			int minLevel = 0, maxLevel = Integer.MAX_VALUE;
+			int minLevel, maxLevel = Integer.MAX_VALUE;
 			minLevel = Integer.parseInt(level[0]);
 			if (level.length > 1) {
 				maxLevel = Integer.parseInt(level[1]);

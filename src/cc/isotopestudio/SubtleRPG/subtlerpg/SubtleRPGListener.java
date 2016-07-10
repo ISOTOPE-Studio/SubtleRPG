@@ -13,12 +13,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
-
-import cc.isotopestudio.SubtleRPG.subtlerpg.SubtleRPG;
 
 public class SubtleRPGListener implements Listener {
 	private final SubtleRPG plugin;
@@ -208,20 +203,15 @@ public class SubtleRPGListener implements Listener {
 
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
-	public void onDefence(EntityDamageByEntityEvent event) {
-
-	}
-
-	public double returnDamage(Player player) {
-		double addDamage = 0;
+	private double returnDamage(Player player) {
+		double addDamage;
 		String group = plugin.getPlayersData().getString("Players." + player.getName() + ".group");
 
 		if (group != null) {
 			addDamage = plugin.getConfig().getDouble(group + ".Attack.default")
 					+ plugin.getConfig().getDouble(group + ".Attack.increasePerPeriod")
 							* (int) (player.getLevel() / plugin.getConfig().getDouble(group + ".Attack.levPeriod"));
-			return returnDamage(player, group, addDamage, 1);
+			return returnDamage(player, addDamage, 1);
 		} else {
 			addDamage = plugin.getConfig().getDouble("DefaultGroup.Attack.default")
 					+ plugin.getConfig().getDouble("DefaultGroup.Attack.increasePerPeriod")
@@ -230,7 +220,7 @@ public class SubtleRPGListener implements Listener {
 		}
 	}
 
-	private double returnDamage(final Player player, final String group, final double addDamage, int subGroupNum) {
+	private double returnDamage(final Player player, final double addDamage, int subGroupNum) {
 		String newGroup = plugin.getPlayersData().getString("Players." + player.getName() + ".subGroup" + subGroupNum);
 		if (newGroup == null) {
 			return addDamage;
@@ -238,19 +228,19 @@ public class SubtleRPGListener implements Listener {
 			double newDamage = plugin.getConfig().getDouble(newGroup + ".Attack.default")
 					+ plugin.getConfig().getDouble(newGroup + ".Attack.increasePerPeriod")
 							* (int) (player.getLevel() / plugin.getConfig().getDouble(newGroup + ".Attack.levPeriod"));
-			return returnDamage(player, newGroup, newDamage + addDamage, subGroupNum + 1);
+			return returnDamage(player, newDamage + addDamage, subGroupNum + 1);
 		}
 	}
 
-	public double returnDefence(Player player) {
-		double Defence = 0;
+	private double returnDefence(Player player) {
+		double Defence;
 		String group = plugin.getPlayersData().getString("Players." + player.getName() + ".group");
 
 		if (group != null) { // Player has a group
 			Defence = plugin.getConfig().getDouble(group + ".Defence.default")
 					+ plugin.getConfig().getDouble(group + ".Defence.increasePerPeriod")
 							* (int) (player.getLevel() / plugin.getConfig().getDouble(group + ".Defence.levPeriod"));
-			return returnDefence(player, group, Defence, 1);
+			return returnDefence(player, Defence, 1);
 
 		} else { // Player does not have a group
 			Defence = plugin.getConfig().getDouble("DefaultGroup.Defence.default") + plugin.getConfig()
@@ -260,7 +250,7 @@ public class SubtleRPGListener implements Listener {
 		}
 	}
 
-	private double returnDefence(final Player player, final String group, final double addDefence, int subGroupNum) {
+	private double returnDefence(final Player player, final double addDefence, int subGroupNum) {
 		String newGroup = plugin.getPlayersData().getString("Players." + player.getName() + ".subGroup" + subGroupNum);
 		if (newGroup == null) {
 			return addDefence;
@@ -268,7 +258,7 @@ public class SubtleRPGListener implements Listener {
 			double newDefence = plugin.getConfig().getDouble(newGroup + ".Defence.default")
 					+ plugin.getConfig().getDouble(newGroup + ".Defence.increasePerPeriod")
 							* (int) (player.getLevel() / plugin.getConfig().getDouble(newGroup + ".Defence.levPeriod"));
-			return returnDefence(player, newGroup, newDefence + addDefence, subGroupNum + 1);
+			return returnDefence(player, newDefence + addDefence, subGroupNum + 1);
 		}
 	}
 

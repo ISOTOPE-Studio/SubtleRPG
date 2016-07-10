@@ -9,9 +9,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class SubtleRPGCommand implements CommandExecutor {
+class SubtleRPGCommand implements CommandExecutor {
 	private final SubtleRPG plugin;
-	SubtleRPGPermission per;
+	private final SubtleRPGPermission per;
 
 	public SubtleRPGCommand(SubtleRPG plugin) {
 		this.plugin = plugin;
@@ -21,8 +21,6 @@ public class SubtleRPGCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("SubtleRPG")) {
-			if (args.length > 0)
-				args[0].toLowerCase();
 			if (args.length > 0 && !args[0].equals("help")) {
 				if (args[0].equals("info")) {
 					if ((sender instanceof Player && (args.length == 1 || args.length == 2))
@@ -34,11 +32,11 @@ public class SubtleRPGCommand implements CommandExecutor {
 										.append(args[1]).append("不存在").toString());
 								return true;
 							} else {// Core
-								sendInfo(sender, args, player);
+								sendInfo(sender, player);
 								return true;
 							}
 						} else {// Core
-							sendInfo(sender, args, (Player) sender);
+							sendInfo(sender, (Player) sender);
 							return true;
 						}
 
@@ -222,28 +220,24 @@ public class SubtleRPGCommand implements CommandExecutor {
 						List<String> groupList = plugin.getConfig().getStringList("Groups");
 						sender.sendMessage(
 								(new StringBuilder(plugin.prefix)).append(ChatColor.AQUA).append("职业列表").toString());
-						for (int i = 0; i < groupList.size(); i++) {
-							String temp = groupList.get(i);
+						for (String temp : groupList) {
 							sender.sendMessage((new StringBuilder()).append(ChatColor.GRAY).append(" - ")
 									.append(ChatColor.GREEN).append(plugin.getConfig().getString(temp + ".name"))
-									.append(ChatColor.GRAY).append("(" + temp + ")").toString());
+									.append(ChatColor.GRAY).append("(").append(temp).append(")").toString());
 						}
 						return true;
 					} else if (args.length == 2) {
 						List<String> groupList = plugin.getConfig().getStringList(args[1] + ".Children");
 						if (groupList.size() == 0) {
-							sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED)
-									.append(args[1] + "没有子职业").toString());
+							sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.RED).append(args[1]).append("没有子职业").toString());
 							return true;
 						}
 						sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA)
-								.append(plugin.getConfig().getString(args[1] + ".name")).append(ChatColor.GRAY)
-								.append("(" + args[1] + ")").append(ChatColor.AQUA).append("子职业列表").toString());
-						for (int i = 0; i < groupList.size(); i++) {
-							String temp = groupList.get(i);
+								.append(plugin.getConfig().getString(args[1] + ".name")).append(ChatColor.GRAY).append("(").append(args[1]).append(")").append(ChatColor.AQUA).append("子职业列表").toString());
+						for (String temp : groupList) {
 							sender.sendMessage((new StringBuilder()).append(ChatColor.GRAY).append(" - ")
 									.append(ChatColor.GREEN).append(plugin.getConfig().getString(temp + ".name"))
-									.append(ChatColor.GRAY).append("(" + temp + ")").toString());
+									.append(ChatColor.GRAY).append("(").append(temp).append(")").toString());
 						}
 						return true;
 					} else {
@@ -254,7 +248,7 @@ public class SubtleRPGCommand implements CommandExecutor {
 				}
 
 				if (args[0].equals("reload")) {
-					if (sender instanceof Player && !((Player) sender).isOp()) {
+					if (sender instanceof Player && !sender.isOp()) {
 						sender.sendMessage(
 								(new StringBuilder(plugin.prefix)).append(ChatColor.RED).append("你没有权限").toString());
 						return true;
@@ -266,8 +260,8 @@ public class SubtleRPGCommand implements CommandExecutor {
 				}
 
 				if (args[0].equals("about")) {
-					sender.sendMessage((new StringBuilder()).append(ChatColor.GRAY).append("---- " + plugin.prefix)
-							.append(ChatColor.RESET).append(ChatColor.DARK_GRAY).append(" " + plugin.version)
+					sender.sendMessage((new StringBuilder()).append(ChatColor.GRAY).append("---- ").append(plugin.prefix)
+							.append(ChatColor.RESET).append(ChatColor.DARK_GRAY).append(" " + SubtleRPG.version)
 							.append(ChatColor.GRAY).append(" ----").toString());
 					sender.sendMessage((new StringBuilder()).append(ChatColor.BLUE).append(ChatColor.ITALIC)
 							.append("为服务器制作的RPG职业插件").toString());
@@ -315,7 +309,7 @@ public class SubtleRPGCommand implements CommandExecutor {
 
 	}
 
-	private void sendInfo(CommandSender sender, String[] args, Player player) {
+	private void sendInfo(CommandSender sender, Player player) {
 		sender.sendMessage((new StringBuilder(plugin.prefix)).append(ChatColor.AQUA).append("玩家")
 				.append(player.getName()).append("信息").toString());
 
@@ -323,7 +317,7 @@ public class SubtleRPGCommand implements CommandExecutor {
 		if (player.isOp()) {
 			player.setOp(false);
 		}
-		double addDamage = 0, Defence = 0;
+		double addDamage, Defence;
 
 		String group = plugin.getPlayersData().getString("Players." + player.getName() + ".group");
 		if (group == null) {

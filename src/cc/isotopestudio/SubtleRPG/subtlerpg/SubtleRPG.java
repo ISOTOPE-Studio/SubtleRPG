@@ -6,7 +6,6 @@ import java.io.IOException;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,29 +15,24 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public final class SubtleRPG extends JavaPlugin {
 
-	public final String version = "v1.3.1-debug";
+	public static final String version = "v1.3.1-debug";
 
 	public final String prefix = (new StringBuilder()).append(ChatColor.GREEN).append("[").append(ChatColor.ITALIC)
 			.append(ChatColor.BOLD).append("SubtleRPG").append(ChatColor.RESET).append(ChatColor.GREEN).append("]")
 			.append(ChatColor.RESET).toString();
 
-	public void createFile(String name) {
-
-		File file;
-		file = new File(getDataFolder(), name + ".yml");
-		if (!file.exists()) {
-			saveDefaultConfig();
-		}
-	}
-
 	@Override
 	public void onEnable() {
 		getLogger().info("加载配置文件中");
 
-		createFile("config");
+		File file;
+		file = new File(getDataFolder(), "config" + ".yml");
+		if (!file.exists()) {
+			saveDefaultConfig();
+		}
 		try {
 			getPlayersData().save(dataFile);
-		} catch (IOException e) {
+		} catch (IOException ignored) {
 		}
 
 		PluginManager pm = this.getServer().getPluginManager();
@@ -64,7 +58,7 @@ public final class SubtleRPG extends JavaPlugin {
 	private File dataFile = null;
 	private FileConfiguration data = null;
 
-	public void reloadPlayersData() {
+	private void reloadPlayersData() {
 		if (dataFile == null) {
 			dataFile = new File(getDataFolder(), "playersData.yml");
 		}
